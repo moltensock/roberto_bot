@@ -341,7 +341,7 @@ for event in longpoll.listen():
                         count += 1
                 else:
                     send_message(sender, "Что-что?")
-                if count == 5:
+                if count == 43:
                     itog = finally_end()
                     for i in range(len(admins)): 
                         send_message(admins[i], itog)
