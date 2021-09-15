@@ -417,7 +417,7 @@ for event in longpoll.listen():
                         send_message(admins[i], itog)
                         i += 1
         elif rm == "оформить заявку":
-            send_message(sender, "ммм хуита")
+            send_message(sender, "оформление заявки")
             request = ""
             req.append([])
             q = len(req) - 1
