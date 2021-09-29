@@ -96,19 +96,26 @@ from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api import VkUpload
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 
+
 def send_message(sender, message):
     authorize.method('messages.send', {'user_id': sender, 'message': message, 'random_id': get_random_id()})
 
+
 def send_button(sender, message):
-    authorize.method('messages.send', {'user_id': sender, 'message': message, 'random_id': get_random_id(), 'keyboard': keyboard.get_keyboard()})
-    
+    authorize.method('messages.send', {'user_id': sender, 'message': message, 'random_id': get_random_id(),
+                                       'keyboard': keyboard.get_keyboard()})
+
+
 def get_name(sayer_id):
-    sender_info = getting_api.users.get(user_ids = sayer_id)[0]
+    sender_info = getting_api.users.get(user_ids=sayer_id)[0]
     full_name = sender_info.get('first_name') + ' ' + sender_info['last_name']
     return full_name
 
+
 def deal(sender, attachment, message):
-    authorize.method('messages.send', {'user_id': sender, 'message': message, 'attachment': ','.join(attachment), 'random_id': get_random_id()})
+    authorize.method('messages.send', {'user_id': sender, 'message': message, 'attachment': ','.join(attachment),
+                                       'random_id': get_random_id()})
+
 
 def finally_end():
     itog = "Распределение контрактов:"
@@ -166,6 +173,7 @@ def finally_end():
         j += 1
     return itog
 
+
 people = []
 req = []
 
@@ -178,12 +186,12 @@ upload = VkUpload(authorize)
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
         admins = [605574836]
-        #admins = [605574836, 252868342, 531102499, 625633090, 338010077, 196630580, 196630580, 313354983]
+        # admins = [605574836, 252868342, 531102499, 625633090, 338010077, 196630580, 196630580, 313354983]
         received_message = event.text
         rm = received_message.lower()
         sender = event.user_id
         sayer_name = get_name(sender)
-        
+
         if rm == "аукцион":
             i = 0
             for i in range(len(admins)):
@@ -201,7 +209,7 @@ for event in longpoll.listen():
                     vote0 = 3
                     pure0 = 1
                     curse0 = 1
-                    
+
                     kill = []
                     heal = []
                     find = []
@@ -215,7 +223,7 @@ for event in longpoll.listen():
                     vote = []
                     pure = []
                     curse = []
-                    
+
                     people = []
                     ids = []
 
@@ -227,8 +235,9 @@ for event in longpoll.listen():
                 elif sender != admins[i]:
                     i += 1
         elif rm == "хочу контракт" or rm == "к началу":
-            keyboard = VkKeyboard(inline=True) 
-            keyboard.add_button('Иммунитет – взять', color=VkKeyboardColor.PRIMARY) #POSITIVE зелёный, NEGATIVE красный, PRIMARY синий
+            keyboard = VkKeyboard(inline=True)
+            keyboard.add_button('Иммунитет – взять',
+                                color=VkKeyboardColor.PRIMARY)  # POSITIVE зелёный, NEGATIVE красный, PRIMARY синий
             keyboard.add_button('Исцеление – взять', color=VkKeyboardColor.PRIMARY)
             keyboard.add_line()
             keyboard.add_button('Дополнительные голоса – взять')
@@ -281,7 +290,8 @@ for event in longpoll.listen():
                 rm = rm[:-8]
                 if rm == "иммунитет":
                     if immune0 == 0:
-                        send_message(sender, "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
+                        send_message(sender,
+                                     "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
                     else:
                         immune.append(sayer_name)
                         ids.append(sender)
@@ -291,7 +301,8 @@ for event in longpoll.listen():
                         count += 1
                 elif rm == "слежка":
                     if seek0 == 0:
-                        send_message(sender, "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
+                        send_message(sender,
+                                     "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
                     else:
                         seek.append(sayer_name)
                         ids.append(sender)
@@ -301,7 +312,8 @@ for event in longpoll.listen():
                         count += 1
                 elif rm == "убийство":
                     if kill0 == 0:
-                        send_message(sender, "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
+                        send_message(sender,
+                                     "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
                     else:
                         kill.append(sayer_name)
                         ids.append(sender)
@@ -311,7 +323,8 @@ for event in longpoll.listen():
                         count += 1
                 elif rm == "исцеление":
                     if heal0 == 0:
-                        send_message(sender, "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
+                        send_message(sender,
+                                     "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
                     else:
                         heal.append(sayer_name)
                         ids.append(sender)
@@ -321,7 +334,8 @@ for event in longpoll.listen():
                         count += 1
                 elif rm == "бутылка виски":
                     if whisky0 == 0:
-                        send_message(sender, "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
+                        send_message(sender,
+                                     "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
                     else:
                         whisky.append(sayer_name)
                         ids.append(sender)
@@ -331,7 +345,8 @@ for event in longpoll.listen():
                         count += 1
                 elif rm == "бондаж":
                     if ropes0 == 0:
-                        send_message(sender, "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
+                        send_message(sender,
+                                     "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
                     else:
                         ropes.append(sayer_name)
                         ids.append(sender)
@@ -341,7 +356,8 @@ for event in longpoll.listen():
                         count += 1
                 elif rm == "частное расследование":
                     if detect0 == 0:
-                        send_message(sender, "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
+                        send_message(sender,
+                                     "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
                     else:
                         detect.append(sayer_name)
                         ids.append(sender)
@@ -351,7 +367,8 @@ for event in longpoll.listen():
                         count += 1
                 elif rm == "афера":
                     if rumour0 == 0:
-                        send_message(sender, "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
+                        send_message(sender,
+                                     "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
                     else:
                         rumour.append(sayer_name)
                         ids.append(sender)
@@ -361,7 +378,8 @@ for event in longpoll.listen():
                         count += 1
                 elif rm == "раскрытие роли":
                     if find0 == 0:
-                        send_message(sender, "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
+                        send_message(sender,
+                                     "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
                     else:
                         find.append(sayer_name)
                         ids.append(sender)
@@ -371,7 +389,8 @@ for event in longpoll.listen():
                         count += 1
                 elif rm == "подмена роли":
                     if close0 == 0:
-                        send_message(sender, "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
+                        send_message(sender,
+                                     "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
                     else:
                         close.append(sayer_name)
                         ids.append(sender)
@@ -381,7 +400,8 @@ for event in longpoll.listen():
                         count += 1
                 elif rm == "проклятие":
                     if curse0 == 0:
-                        send_message(sender, "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
+                        send_message(sender,
+                                     "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
                     else:
                         curse.append(sayer_name)
                         ids.append(sender)
@@ -391,7 +411,8 @@ for event in longpoll.listen():
                         count += 1
                 elif rm == "дополнительные голоса":
                     if vote0 == 0:
-                        send_message(sender, "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
+                        send_message(sender,
+                                     "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
                     else:
                         vote.append(sayer_name)
                         ids.append(sender)
@@ -401,7 +422,8 @@ for event in longpoll.listen():
                         count += 1
                 elif rm == "очищение":
                     if pure0 == 0:
-                        send_message(sender, "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
+                        send_message(sender,
+                                     "Все эти вещи уже разобрали! Не зли сотрудника полиции, лучше выбирай из того, что лежит на столе!")
                     else:
                         pure.append(sayer_name)
                         ids.append(sender)
@@ -413,14 +435,13 @@ for event in longpoll.listen():
                     send_message(sender, "Что-что?")
                 if count == 43:
                     itog = finally_end()
-                    for i in range(len(admins)): 
+                    for i in range(len(admins)):
                         send_message(admins[i], itog)
                         i += 1
         elif rm == "оформить заявку":
             request = ""  # creating the request pattern
-            req.append([])  # creating player's slot
+            req.append(dict(sender=sender))  # creating player's slot
             q = len(req) - 1  # finding player's index in req
-            req[q].append(sender)  # assigning slot to player
             keyboard = VkKeyboard(inline=True)
             keyboard.add_button('Активное действие')
             keyboard.add_line()
@@ -428,23 +449,25 @@ for event in longpoll.listen():
             send_button(sender, "Что тебя интересует в этот раз?")
         else:
             for i in range(len(req)):
-                if req[q][i] == sender: # clarify if they're making a request
+                sender_id = req[i-1]['sender']
+                if sender_id == sender:  # clarify if they're making a request
                     if rm == 'распоряжение':
                         send_message(sender, 'Уточни фазу и время, в которое ты будешь отсутствовать.\nОбязательно! '
                                              'Сначала указывай фазу (день или ночь), а потом время. Например: \"Ночь, '
                                              '19:00-20:00\" или \"День, до 16:00\".')
                     elif rm[:4] == 'день' or rm[:4] == 'ночь':
-                        req[q].append(rm)
+                        req[i - 1]['phase'] = rm
                         send_message(sender, "На какой случай ты оставляешь распоряжение. Пример: если в меня будут "
                                              "стрелять. Если будут убивать члена моей команды. Если меня будут "
                                              "проверять и т.п.\nОбязательно! Начни со слова \"Если\".")
                     elif rm[:4] == 'если':
-                        req[q].append(rm)
-                    if len(req[q]) == 4:
-                        request = ""
-                        i = 0
-                        for i in range(len(req[q])):
-                            request += str(req[q][i])
-                            i += 1
-                        send_message(605574836, request)
-                        req.pop(q)
+                        req[i - 1]['condition'] = rm
+                        keyboard = VkKeyboard(inline=True)
+                        keyboard.add_button('Ход роли')
+                        keyboard.add_line()
+                        keyboard.add_button('Контракт')
+                        send_button(sender, "Какое действие будет нужно исполнить?")
+                    elif rm == 'ход роли':
+                        req[i - 1]['activity'] = rm
+                        send_message(sender, 'Уточните вашу роль')
+                    break
