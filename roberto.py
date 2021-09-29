@@ -439,43 +439,96 @@ for event in longpoll.listen():
                         send_message(admins[i], itog)
                         i += 1
         elif rm == "оформить заявку":
-            request = ""  # creating the request pattern
             req.append(dict(sender=sender))  # creating player's slot
-            q = len(req) - 1  # finding player's index in req
             keyboard = VkKeyboard(inline=True)
-            keyboard.add_button('Активное действие')
+            keyboard.add_button('Черри')
+            keyboard.add_button('Вишенка')
             keyboard.add_line()
-            keyboard.add_button('Распоряжение')
-            send_button(sender, "Что тебя интересует в этот раз?")
+            keyboard.add_button('Тут только Черри')
+            keyboard.add_button('Вишня')
+            send_button(sender, "[Шаг 1] Кто твой ведущий?")
         else:
             for i in range(len(req)):
-                sender_id = req[i-1]['sender']
+                sender_id = req[i - 1]['sender']
                 if sender_id == sender:  # clarify if they're making a request
-                    if rm == 'распоряжение':
-                        send_message(sender, 'Уточни фазу и время, в которое ты будешь отсутствовать.\nОбязательно! '
-                                             'Сначала указывай фазу (день или ночь), а потом время. Пример: \"Ночь, '
-                                             '19:00-20:00\" или \"День, до 16:00\".')
+                    if rm == 'черри' or rm == 'вишенка' or rm == 'тут только черри' or rm == 'вишня':
+                        keyboard = VkKeyboard(inline=True)
+                        keyboard.add_button('Активное действие')
+                        keyboard.add_line()
+                        keyboard.add_button('Распоряжение')
+                        send_button(sender, "[Шаг 2] Что тебя интересует в этот раз?")
+                    elif rm == 'активное действие':
+                        req[i - 1]['type'] = 'Активное действие'
+                        keyboard = VkKeyboard(inline=True)
+                        keyboard.add_button('Ход роли')
+                        keyboard.add_line()
+                        keyboard.add_button('Активация контракта')
+                        send_button(sender, "[Шаг 3] Какое действие ты хочешь совершить?")
+                    elif rm == 'распоряжение':
+                        req[i - 1]['type'] = 'Распоряжение на время отсутствия'
+                        send_message(sender,
+                                     '[Шаг 3] Уточни фазу и время, в которое ты будешь отсутствовать.\nОбязательно! '
+                                     'Сначала указывай фазу (день или ночь), а потом время. Пример: \"Ночь, '
+                                     '19:00-20:00\" или \"День, до 16:00\".')
                     elif rm[:4] == 'день' or rm[:4] == 'ночь':
                         req[i - 1]['phase'] = rm
-                        send_message(sender, "На какой случай ты оставляешь распоряжение. \nОбязательно! Начни со "
-                                             "слова \"Если\". Пример: если в меня будут стрелять. Если будут убивать "
-                                             "члена моей команды. Если меня будут проверять и т.п.")
+                        send_message(sender,
+                                     "[Шаг 4] На какой случай ты оставляешь распоряжение. \nОбязательно! Начни со "
+                                     "слова \"Если\". Пример: если в меня будут стрелять. Если будут убивать "
+                                     "члена моей команды. Если меня будут проверять и т.п.")
                     elif rm[:4] == 'если':
                         req[i - 1]['condition'] = rm
                         keyboard = VkKeyboard(inline=True)
                         keyboard.add_button('Ход роли')
                         keyboard.add_line()
                         keyboard.add_button('Активация контракта')
-                        send_button(sender, "Какое действие будет нужно исполнить?")
+                        send_button(sender, "[Шаг 5] Какое действие нужно исполнить?")
                     elif rm == 'ход роли':
                         req[i - 1]['activity'] = rm
-                        send_message(sender, 'Уточни свою роль.\nОбязательно! Начни со слова \"Роль\". Пример: \"Роль '
-                                             'дон\", \"Роль журналист\" и т.п.')
+                        if req[i - 1]['type'] == 'Активное действие':
+                            a = 4
+                        else:
+                            a = 6
+                        send_message(sender,
+                                     '[Шаг {}] Уточни свою роль.\nОбязательно! Начни со слова \"Роль\". Пример: \"Роль '
+                                     'дон\", \"Роль журналист\" и т.п.'.format(a))
                     elif rm == 'активация контракта':
                         req[i - 1]['activity'] = rm
-                        send_message(sender, 'Уточни используемый контракт.\nОбязательно! Начни со слова '
-                                             '\"Контракт\". Пример: \"Контракт иммунитет\", \"Контракт слежка\" и т.п.')
+                        if req[i - 1]['type'] == 'Активное действие':
+                            a = 5
+                        else:
+                            a = 7
+                        send_message(sender, '[Шаг {}] Уточни используемый контракт.\nОбязательно! Начни со слова '
+                                             '\"Контракт\". Пример: \"Контракт иммунитет\", \"Контракт слежка\" и т.п.'.format(
+                            a))
                     elif rm[:4] == 'роль' or rm[:8] == 'контракт':
-                        req[i - 1]['role'] = rm
-                        send_message(sender, '')
+                        req[i - 1]['item'] = rm
+                        if req[i - 1]['type'] == 'Активное действие':
+                            a = 5
+                        else:
+                            a = 8
+                        send_message(sender, '[Шаг {}] На кого направлено твоё действие? Необходимо указать ссылку на '
+                                             'страницу выбранного игрока (в формате https://vk.com/id) и его имя. '
+                                             '\nПример: https://vk.com/nastya_vorobushek Кирена\nЕсли тебе нужно '
+                                             'указать двух игроков, также указывай сначала ссылки: '
+                                             'https://vk.com/nastya_vorobushek с Кирены https://vk.com/cherrss на '
+                                             'Черри\nЕсли ты хочешь сходить на себя, так и напиши: На себя. Указывать '
+                                             'на себя ссылку не нужно.'.format(a))
+                    elif rm[:15] == 'https://vk.com/':
+                        req[i - 1]['victim'] = received_message
+                        type_of = req[i - 1]['type'].capitalize()
+                        activity = req[i - 1]['activity']
+                        item = req[i - 1]['item'].capitalize()
+                        victim = req[i - 1]['victim']
+                        try:
+                            phase = req[i - 1]['phase'].capitalize()
+                            condition = req[i - 1]['condition'].capitalize()
+                        except KeyError:
+                            phase, condition = '', ''
+
+                        # TODO: разделение на шаблон заявки для распоряда и для обычного действия
+
+                        send_message(sender, "Поздравляю, твоя заявка отправлена на рассмотрение! Твой ведущий " \
+                                             "напишет тебе, как только она будет принята. Напомню, что ты совершаешь "
+                                             "следующее: \n\n{}: {}\n{}\n{}\n{}\n{}".format(type_of, activity, phase, condition, item, victim))
                     break
