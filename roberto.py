@@ -417,15 +417,29 @@ for event in longpoll.listen():
                         send_message(admins[i], itog)
                         i += 1
         elif rm == "оформить заявку":
-            send_message(sender, "оформление заявки")
-            request = ""
-            req.append([])
-            q = len(req) - 1
-            req[q].append(sender)
+            request = ""  # creating the request pattern
+            req.append([])  # creating player's slot
+            q = len(req) - 1  # finding player's index in req
+            req[q].append(sender)  # assigning slot to player
+            keyboard = VkKeyboard(inline=True)
+            keyboard.add_button('Активное действие')
+            keyboard.add_line()
+            keyboard.add_button('Распоряжение')
+            send_button(sender, "Что тебя интересует в этот раз?")
         else:
             for i in range(len(req)):
-                if req[q][i] == sender:
-                    req[q].append(rm)
+                if req[q][i] == sender: # clarify if they're making a request
+                    if rm == 'распоряжение':
+                        send_message(sender, 'Уточни фазу и время, в которое ты будешь отсутствовать.\nОбязательно! '
+                                             'Сначала указывай фазу (день или ночь), а потом время. Например: \"Ночь, '
+                                             '19:00-20:00\" или \"День, до 16:00\".')
+                    elif rm[:4] == 'день' or rm[:4] == 'ночь':
+                        req[q].append(rm)
+                        send_message(sender, "На какой случай ты оставляешь распоряжение. Пример: если в меня будут "
+                                             "стрелять. Если будут убивать члена моей команды. Если меня будут "
+                                             "проверять и т.п.\nОбязательно! Начни со слова \"Если\".")
+                    elif rm[:4] == 'если':
+                        req[q].append(rm)
                     if len(req[q]) == 4:
                         request = ""
                         i = 0
