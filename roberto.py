@@ -176,6 +176,7 @@ def finally_end():
 
 people = []
 req = []
+group = 206565783
 
 token = "24ea444dcdf681c5a18f393ff2c3a130f6fa000e03a1f21d83cef81acac6990f563d5c71c32dbfaa0cef5"
 authorize = vk_api.VkApi(token=token)
@@ -452,6 +453,7 @@ for event in longpoll.listen():
                 sender_id = req[i - 1]['sender']
                 if sender_id == sender:  # clarify if they're making a request
                     if rm == 'черри' or rm == 'вишенка' or rm == 'тут только черри' or rm == 'вишня':
+                        req[i - 1]['host'] = rm.capitalize()
                         keyboard = VkKeyboard(inline=True)
                         keyboard.add_button('Активное действие')
                         keyboard.add_line()
@@ -520,6 +522,7 @@ for event in longpoll.listen():
                         activity = req[i - 1]['activity']
                         item = req[i - 1]['item'].capitalize()
                         victim = req[i - 1]['victim']
+                        host = req[i - 1]['host']
                         try:
                             phase = req[i - 1]['phase'].capitalize()
                             condition = req[i - 1]['condition'].capitalize()
@@ -527,8 +530,25 @@ for event in longpoll.listen():
                             phase, condition = '', ''
 
                         # TODO: разделение на шаблон заявки для распоряда и для обычного действия
-
-                        send_message(sender, "Поздравляю, твоя заявка отправлена на рассмотрение! Твой ведущий " \
-                                             "напишет тебе, как только она будет принята. Напомню, что ты совершаешь "
-                                             "следующее: \n\n{}: {}\n{}\n{}\n{}\n{}".format(type_of, activity, phase, condition, item, victim))
+                        if phase == '':
+                            send_message(sender, "Поздравляю, твоя заявка отправлена на рассмотрение! Твой ведущий "
+                                                 "напишет тебе, как только она будет принята. Напомню, "
+                                                 "что ты совершаешь следующее: \n\n{} — {}\nВремя отсутствия: {}\n"
+                                                 "Условие исполнения: {}\nИсполнить: {}\nНа кого: {}".format(
+                                type_of, activity, phase, condition, item, victim))
+                            for admin in admins:
+                                send_message(admin, "Новая заявка\n{} vk.com/id{}\nДиалог: vk.com/gim{}?sel={}\n\n "
+                                                    "Ведущий: {}\n\nВремя отсутствия: {}\n\nУсловие исполнения: "
+                                                    "{}\n\nДействие: {}\n\nРоль/контракт: {}\n\nНа кого: {}".format(
+                                sayer_name, sender, group, sender, host, phase, condition, activity, item, victim))
+                        else:
+                            send_message(sender, "Поздравляю, твоя заявка отправлена на рассмотрение! Твой ведущий "
+                                                 "напишет тебе, как только она будет принята. Напомню, что ты "
+                                                 "совершаешь следующее: \n\n{} — {}\nИсполнить: {}\nНа кого: {}".format(
+                                type_of, activity, item, victim))
+                            for admin in admins:
+                                send_message(admin, "Новая заявка\n{} vk.com/id{}\nДиалог: "
+                                                    "vk.com/gim{}?sel={}\n\nВедущий: {}\n\n Действие: {}\n\n "
+                                                    "Роль/контракт: {}\n\nНа кого: {}".format(
+                                    sayer_name, sender, group, sender, host, activity, item, victim))
                     break
