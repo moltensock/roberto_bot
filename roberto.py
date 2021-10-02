@@ -497,7 +497,7 @@ for event in longpoll.listen():
                     elif rm == 'активация контракта':
                         req[i - 1]['activity'] = rm
                         if req[i - 1]['type'] == 'Активное действие':
-                            a = 5
+                            a = 4
                         else:
                             a = 7
                         send_message(sender, '[Шаг {}] Уточни используемый контракт.\nОбязательно! Начни со слова '
@@ -516,7 +516,7 @@ for event in longpoll.listen():
                                              'https://vk.com/nastya_vorobushek с Кирены https://vk.com/cherrss на '
                                              'Черри\nЕсли ты хочешь сходить на себя, так и напиши: На себя. Указывать '
                                              'на себя ссылку не нужно.'.format(a))
-                    elif rm[:15] == 'https://vk.com/':
+                    elif rm[:15] == 'https://vk.com/' or rm == 'на себя':
                         req[i - 1]['victim'] = received_message
                         type_of = req[i - 1]['type'].capitalize()
                         activity = req[i - 1]['activity'].capitalize()
