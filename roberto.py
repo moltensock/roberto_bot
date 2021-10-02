@@ -521,6 +521,12 @@ for event in longpoll.listen():
                         type_of = req[i - 1]['type'].capitalize()
                         activity = req[i - 1]['activity']
                         item = req[i - 1]['item'].capitalize()
+                        if req[i - 1]['item'][:4] == 'роль':
+                            item1 = 'Роль'
+                            item2 = req[i - 1]['item'][4:].capitalize()
+                        else:
+                            item1 = 'Контракт'
+                            item2 = req[i - 1]['item'][8:]
                         victim = req[i - 1]['victim']
                         host = req[i - 1]['host']
                         try:
@@ -537,10 +543,10 @@ for event in longpoll.listen():
                                                  "Условие исполнения: {}\nИсполнить: {}\nНа кого: {}".format(
                                 type_of, activity, phase, condition, item, victim))
                             for admin in admins:
-                                send_message(admin, "Новая заявка\n{} vk.com/id{}\nДиалог: vk.com/gim{}?sel={}\n\n "
+                                send_message(admin, "Новая заявка\n{} vk.com/id{}\nДиалог: vk.com/gim{}?sel={}\n\n"
                                                     "Ведущий: {}\n\nВремя отсутствия: {}\n\nУсловие исполнения: "
-                                                    "{}\n\nДействие: {}\n\nРоль/контракт: {}\n\nНа кого: {}".format(
-                                sayer_name, sender, group, sender, host, phase, condition, activity, item, victim))
+                                                    "{}\n\nДействие: {}\n\n{}: {}\n\nНа кого: {}".format(
+                                sayer_name, sender, group, sender, host, phase, condition, activity, item1, item2, victim))
                         else:
                             send_message(sender, "Поздравляю, твоя заявка отправлена на рассмотрение! Твой ведущий "
                                                  "напишет тебе, как только она будет принята. Напомню, что ты "
@@ -548,7 +554,8 @@ for event in longpoll.listen():
                                 type_of, activity, item, victim))
                             for admin in admins:
                                 send_message(admin, "Новая заявка\n{} vk.com/id{}\nДиалог: "
-                                                    "vk.com/gim{}?sel={}\n\nВедущий: {}\n\n Действие: {}\n\n "
-                                                    "Роль/контракт: {}\n\nНа кого: {}".format(
-                                    sayer_name, sender, group, sender, host, activity, item, victim))
+                                                    "vk.com/gim{}?sel={}\n\nВедущий: {}\n\nДействие: {}\n\n"
+                                                    "{}: {}\n\nНа кого: {}".format(
+                                    sayer_name, sender, group, sender, host, activity, item1, item2, victim))
+                        req.pop(i - 1)
                     break
