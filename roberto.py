@@ -519,14 +519,14 @@ for event in longpoll.listen():
                     elif rm[:15] == 'https://vk.com/':
                         req[i - 1]['victim'] = received_message
                         type_of = req[i - 1]['type'].capitalize()
-                        activity = req[i - 1]['activity']
+                        activity = req[i - 1]['activity'].capitalize()
                         item = req[i - 1]['item'].capitalize()
                         if req[i - 1]['item'][:4] == 'роль':
                             item1 = 'Роль'
-                            item2 = req[i - 1]['item'][4:].capitalize()
+                            item2 = req[i - 1]['item'][5:].capitalize()
                         else:
                             item1 = 'Контракт'
-                            item2 = req[i - 1]['item'][8:]
+                            item2 = req[i - 1]['item'][9:].capitalize()
                         victim = req[i - 1]['victim']
                         host = req[i - 1]['host']
                         try:
