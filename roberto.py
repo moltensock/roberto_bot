@@ -472,7 +472,7 @@ for event in longpoll.listen():
                         keyboard.add_button('День')
                         keyboard.add_line()
                         keyboard.add_button('Ночь')
-                        send_message(sender, '[Шаг 3] Уточни фазу, в которую ты будешь отсутствовать.')
+                        send_button(sender, '[Шаг 3] Уточни фазу, в которую ты будешь отсутствовать.')
                     elif rm[:4] == 'день' or rm[:4] == 'ночь':
                         req[i - 1]['phase'] = rm
                         send_message(sender,
