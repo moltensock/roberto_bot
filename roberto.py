@@ -519,7 +519,6 @@ for event in longpoll.listen():
                         req[i - 1]['victim'] = received_message
                         type_of = req[i - 1]['type'].capitalize()
                         activity = req[i - 1]['activity'].capitalize()
-                        item = req[i - 1]['item'].capitalize()
                         if req[i - 1]['item'][:4] == 'роль':
                             item1 = 'Роль'
                             item1_1 = 'роли'
@@ -541,7 +540,7 @@ for event in longpoll.listen():
                                                  "напишет тебе, как только она будет принята. Напомню, "
                                                  "что ты совершаешь следующее: \n\n{} — {}\nВремя отсутствия: {}\n"
                                                  "Условие исполнения: {}\nИсполнить: действие {} {}\nНа кого: {}".format(
-                                type_of, activity, phase, condition, item1_1, item, victim))
+                                type_of, activity, phase, condition, item1_1, item2, victim))
                             for admin in admins:
                                 send_message(admin, "Новая заявка (распоряжение на время отсутствия)\n{} vk.com/id{"
                                                     "}\nДиалог: vk.com/gim{}?sel={}\n\n"
@@ -552,7 +551,7 @@ for event in longpoll.listen():
                             send_message(sender, "Поздравляю, твоя заявка отправлена на рассмотрение! Твой ведущий "
                                                  "напишет тебе, как только она будет принята. Напомню, что ты "
                                                  "совершаешь следующее: \n\n{} — {}\nИсполнить: действие {} {}\nНа кого: {}".format(
-                                type_of, activity, item1_1, item, victim))
+                                type_of, activity, item1_1, item2, victim))
                             for admin in admins:
                                 send_message(admin, "Новая заявка\n{} vk.com/id{}\nДиалог: "
                                                     "vk.com/gim{}?sel={}\n\nВедущий: {}\n\nДействие: {}\n\n"
