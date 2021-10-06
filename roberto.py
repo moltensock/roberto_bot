@@ -470,7 +470,6 @@ for event in longpoll.listen():
                         req[i - 1]['type'] = 'Распоряжение на время отсутствия'
                         keyboard = VkKeyboard(inline=True)
                         keyboard.add_button('День')
-                        keyboard.add_line()
                         keyboard.add_button('Ночь')
                         send_button(sender, '[Шаг 3] Уточни фазу, в которую ты будешь отсутствовать.')
                     elif rm[:4] == 'день' or rm[:4] == 'ночь':
