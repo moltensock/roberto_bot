@@ -468,10 +468,11 @@ for event in longpoll.listen():
                         send_button(sender, "[Шаг 3] Какое действие ты хочешь совершить?")
                     elif rm == 'распоряжение':
                         req[i - 1]['type'] = 'Распоряжение на время отсутствия'
-                        send_message(sender,
-                                     '[Шаг 3] Уточни фазу и время, в которое ты будешь отсутствовать.\nОбязательно! '
-                                     'Сначала указывай фазу (день или ночь), а потом время. \nПример: \"Ночь, '
-                                     '19:00-20:00\" или \"День, до 16:00\".')
+                        keyboard = VkKeyboard(inline=True)
+                        keyboard.add_button('День')
+                        keyboard.add_line()
+                        keyboard.add_button('Ночь')
+                        send_message(sender, '[Шаг 3] Уточни фазу, в которую ты будешь отсутствовать.')
                     elif rm[:4] == 'день' or rm[:4] == 'ночь':
                         req[i - 1]['phase'] = rm
                         send_message(sender,
@@ -535,7 +536,6 @@ for event in longpoll.listen():
                         except KeyError:
                             phase, condition = '', ''
 
-                        # TODO: в рассылке ведущим указывать если распоряд
                         if phase != '':
                             send_message(sender, "Поздравляю, твоя заявка отправлена на рассмотрение! Твой ведущий "
                                                  "напишет тебе, как только она будет принята. Напомню, "
@@ -543,7 +543,8 @@ for event in longpoll.listen():
                                                  "Условие исполнения: {}\nИсполнить: {}\nНа кого: {}".format(
                                 type_of, activity, phase, condition, item, victim))
                             for admin in admins:
-                                send_message(admin, "Новая заявка\n{} vk.com/id{}\nДиалог: vk.com/gim{}?sel={}\n\n"
+                                send_message(admin, "Новая заявка (распоряжение на время отсутствия)\n{} vk.com/id{"
+                                                    "}\nДиалог: vk.com/gim{}?sel={}\n\n"
                                                     "Ведущий: {}\n\nВремя отсутствия: {}\n\nУсловие исполнения: "
                                                     "{}\n\nДействие: {}\n\n{}: {}\n\nНа кого: {}".format(
                                 sayer_name, sender, group, sender, host, phase, condition, activity, item1, item2, victim))
