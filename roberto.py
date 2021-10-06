@@ -501,8 +501,7 @@ for event in longpoll.listen():
                         else:
                             a = 6
                         send_message(sender, '[Шаг {}] Уточни используемый контракт.\nОбязательно! Начни со слова '
-                                             '\"Контракт\". Пример: \"Контракт иммунитет\", \"Контракт слежка\" и т.п.'.format(
-                            a))
+                                             '\"Контракт\". Пример: \"Контракт иммунитет\", \"Контракт слежка\" и т.п.'.format(a))
                     elif rm[:4] == 'роль' or rm[:8] == 'контракт':
                         req[i - 1]['item'] = rm
                         if req[i - 1]['type'] == 'Активное действие':
@@ -523,9 +522,11 @@ for event in longpoll.listen():
                         item = req[i - 1]['item'].capitalize()
                         if req[i - 1]['item'][:4] == 'роль':
                             item1 = 'Роль'
+                            item1_1 = 'роли'
                             item2 = req[i - 1]['item'][5:].capitalize()
                         else:
                             item1 = 'Контракт'
+                            item1_1 = 'контракта'
                             item2 = req[i - 1]['item'][9:].capitalize()
                         victim = req[i - 1]['victim']
                         host = req[i - 1]['host']
@@ -539,8 +540,8 @@ for event in longpoll.listen():
                             send_message(sender, "Поздравляю, твоя заявка отправлена на рассмотрение! Твой ведущий "
                                                  "напишет тебе, как только она будет принята. Напомню, "
                                                  "что ты совершаешь следующее: \n\n{} — {}\nВремя отсутствия: {}\n"
-                                                 "Условие исполнения: {}\nИсполнить: {}\nНа кого: {}".format(
-                                type_of, activity, phase, condition, item, victim))
+                                                 "Условие исполнения: {}\nИсполнить: действие {} {}\nНа кого: {}".format(
+                                type_of, activity, phase, condition, item1_1, item, victim))
                             for admin in admins:
                                 send_message(admin, "Новая заявка (распоряжение на время отсутствия)\n{} vk.com/id{"
                                                     "}\nДиалог: vk.com/gim{}?sel={}\n\n"
@@ -550,8 +551,8 @@ for event in longpoll.listen():
                         else:
                             send_message(sender, "Поздравляю, твоя заявка отправлена на рассмотрение! Твой ведущий "
                                                  "напишет тебе, как только она будет принята. Напомню, что ты "
-                                                 "совершаешь следующее: \n\n{} — {}\nИсполнить: {}\nНа кого: {}".format(
-                                type_of, activity, item, victim))
+                                                 "совершаешь следующее: \n\n{} — {}\nИсполнить: действие {} {}\nНа кого: {}".format(
+                                type_of, activity, item1_1, item, victim))
                             for admin in admins:
                                 send_message(admin, "Новая заявка\n{} vk.com/id{}\nДиалог: "
                                                     "vk.com/gim{}?sel={}\n\nВедущий: {}\n\nДействие: {}\n\n"
