@@ -189,7 +189,7 @@ upload = VkUpload(authorize)
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
         # admins = [605574836]
-        admins = [605574836, 572147366, 252868342, 338010077, 471824402, 313354983]
+        admins = [605574836, 572147366, 252868342, 338010077, 313354983] # 471824402
         received_message = event.text
         rm = received_message.lower()
         sender = event.user_id
