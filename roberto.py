@@ -189,7 +189,7 @@ upload = VkUpload(authorize)
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
         # admins = [605574836]
-        admins = [605574836, 572147366, 252868342, 338010077, 313354983] # 471824402
+        admins = [605574836, 572147366, 252868342, 338010077, 313354983, 471824402]
         received_message = event.text
         rm = received_message.lower()
         sender = event.user_id
@@ -371,14 +371,18 @@ for event in longpoll.listen():
                         send_message(admins[i], itog)
                         i += 1
         elif rm == "оформить заявку":
+            for i in range(len(req)):
+                sender_id = req[i - 1]['sender']
+                if sender_id == sender:
+                    req.pop(i - 1)
+                    break
             req.append(dict(sender=sender))  # creating player's slot
             keyboard = VkKeyboard(inline=True)
             keyboard.add_button('Черри')
             keyboard.add_button('Джо')
-            keyboard.add_line()
             keyboard.add_button('Кирена')
-            keyboard.add_button('Тропа')
             keyboard.add_line()
+            keyboard.add_button('Тропа')
             keyboard.add_button('Фости')
             send_button(sender, "[Шаг 1] Кто твой ведущий?")
         else:
