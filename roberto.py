@@ -106,8 +106,9 @@ def get_name(sayer_id):
 
 
 def deal(sender, attachment, message):
-    authorize.method('messages.send', {'user_id': sender, 'message': message, 'attachment': attachment, # ','.join(attachment),
-                                       'random_id': get_random_id()})
+    authorize.method('messages.send',
+                     {'user_id': sender, 'message': message, 'attachment': attachment,  # ','.join(attachment),
+                      'random_id': get_random_id()})
 
 
 def runout(sender):
@@ -184,6 +185,7 @@ def finally_end():
 people = []
 req = []
 group = 208174923
+au = 0
 
 token = "c8e52feefd22e9a472f7631e33950b7c57ea4de61c6ecaa0707d03fa223aa799ee3c8aa0f2f9653f32cab"
 authorize = vk_api.VkApi(token=token)
@@ -204,6 +206,7 @@ for event in longpoll.listen():
             i = 0
             for i in range(len(admins)):
                 if sender == admins[i]:
+                    au = 1
                     kill0 = 6
                     heal0 = 6
                     find0 = 6
@@ -242,7 +245,7 @@ for event in longpoll.listen():
                     break
                 elif sender != admins[i]:
                     i += 1
-        elif rm == "хочу контракт" or rm == "к началу":
+        elif (rm == "хочу контракт" or rm == "к началу") and au == 1:
             keyboard = VkKeyboard(inline=True)
             keyboard.add_button('Иммунитет – взять',
                                 color=VkKeyboardColor.PRIMARY)  # POSITIVE зелёный, NEGATIVE красный, PRIMARY синий
@@ -260,14 +263,14 @@ for event in longpoll.listen():
                                 "дверь чулана, из-за которой мерцает тусклый свет. Ты решаешь зайти туда и видишь, "
                                 "что на столе разложены предметы. Может, стоит взять один? Но только один, "
                                 "иначе тебя заметят!")
-        elif rm == "список":
+        elif rm == "список" and au == 1:
             for i in range(len(admins)):
                 if sender == admins[i]:
                     itog = finally_end()
                     send_message(sender, itog)
                 else:
                     i += 1
-        elif rm == "больше контрактов":
+        elif rm == "больше контрактов" and au == 1:
             keyboard = VkKeyboard(inline=True)
             keyboard.add_button('Бондаж – взять', color=VkKeyboardColor.PRIMARY)
             keyboard.add_button('Афера – взять', color=VkKeyboardColor.PRIMARY)
@@ -281,7 +284,7 @@ for event in longpoll.listen():
             keyboard.add_button('Бутылка виски – взять', color=VkKeyboardColor.PRIMARY)
             keyboard.add_button('К началу', color=VkKeyboardColor.PRIMARY)
             send_button(sender, "Обернувшись, ты видишь, что на стене висят другие вещи:")
-        elif rm[-7:] == "– взять":
+        elif rm[-7:] == "– взять" and au == 1:
             false = 0
             k = 0
             for k in range(len(ids)):
@@ -471,13 +474,14 @@ for event in longpoll.listen():
                             a = 5
                         else:
                             a = 8
-                        send_message(sender, '🎃 [Шаг {}] На кого направлено твоё действие? Необходимо указать ссылку на '
-                                             'страницу выбранного игрока (в формате https://vk.com/id) и его имя. '
-                                             '\nПример: https://vk.com/nastya_vorobushek Кирена\nЕсли тебе нужно '
-                                             'указать двух игроков, также указывай сначала ссылки: '
-                                             'https://vk.com/nastya_vorobushek с Кирены https://vk.com/cherrss на '
-                                             'Черри\nЕсли ты хочешь сходить на себя, так и напиши: На себя. Указывать '
-                                             'на себя ссылку не нужно.'.format(a))
+                        send_message(sender,
+                                     '🎃 [Шаг {}] На кого направлено твоё действие? Необходимо указать ссылку на '
+                                     'страницу выбранного игрока (в формате https://vk.com/id) и его имя. '
+                                     '\nПример: https://vk.com/nastya_vorobushek Кирена\nЕсли тебе нужно '
+                                     'указать двух игроков, также указывай сначала ссылки: '
+                                     'https://vk.com/nastya_vorobushek с Кирены https://vk.com/cherrss на '
+                                     'Черри\nЕсли ты хочешь сходить на себя, так и напиши: На себя. Указывать '
+                                     'на себя ссылку не нужно.'.format(a))
                     elif rm[:15] == 'https://vk.com/' or rm == 'на себя':
                         req[i - 1]['victim'] = received_message
                         type_of = req[i - 1]['type'].capitalize()
