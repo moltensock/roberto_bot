@@ -184,6 +184,7 @@ def finally_end():
 
 people = []
 req = []
+riddle = []
 group = 209615746
 au = 0
 
@@ -410,118 +411,253 @@ for event in longpoll.listen():
             keyboard.add_button('Тропа')
             keyboard.add_button('Трики')
             send_button(sender, "❄ [Шаг 1] Кто твой ведущий?")
-        else:
-            for i in range(len(req)):
-                sender_id = req[i - 1]['sender']
-                if sender_id == sender:  # clarify if they're making a request
-                    if rm == 'черри' or rm == 'джо' or rm == 'трики' or rm == 'тропа' or rm == 'нат':
-                        req[i - 1]['host'] = rm.capitalize()
-                        keyboard = VkKeyboard(inline=True)
-                        keyboard.add_button('Активное действие')
-                        keyboard.add_line()
-                        keyboard.add_button('Распоряжение')
-                        send_button(sender, "❄ [Шаг 2] Что тебя интересует в этот раз?")
-                    elif rm == 'активное действие':
-                        req[i - 1]['type'] = 'Активное действие'
-                        keyboard = VkKeyboard(inline=True)
-                        keyboard.add_button('Ход роли')
-                        keyboard.add_line()
-                        keyboard.add_button('Активация контракта')
-                        send_button(sender, "❄ [Шаг 3] Какое действие ты хочешь совершить?")
-                    elif rm == 'распоряжение':
-                        req[i - 1]['type'] = 'Распоряжение на время отсутствия'
-                        keyboard = VkKeyboard(inline=True)
-                        keyboard.add_button('День')
-                        keyboard.add_button('Ночь')
-                        send_button(sender, '❄ [Шаг 3] Уточни фазу, в которую ты будешь отсутствовать.')
-                    elif rm[:4] == 'день' or rm[:4] == 'ночь':
-                        req[i - 1]['phase'] = rm
-                        send_message(sender,
-                                     "❄ [Шаг 4] На какой случай ты оставляешь распоряжение. \nОбязательно! Начни со "
-                                     "слова \"Если\". Пример: если в меня будут стрелять. Если будут убивать "
-                                     "члена моей команды. Если меня будут проверять и т.п.")
-                    elif rm[:4] == 'если':
-                        req[i - 1]['condition'] = rm
-                        keyboard = VkKeyboard(inline=True)
-                        keyboard.add_button('Ход роли')
-                        keyboard.add_line()
-                        keyboard.add_button('Активация контракта')
-                        send_button(sender, "❄ [Шаг 5] Какое действие нужно исполнить?")
-                    elif rm == 'ход роли':
-                        req[i - 1]['activity'] = rm
-                        if req[i - 1]['type'] == 'Активное действие':
-                            a = 4
-                        else:
-                            a = 6
-                        send_message(sender,
-                                     '❄ [Шаг {}] Уточни свою роль.\nОбязательно! Начни со слова \"Роль\". Пример: \"Роль '
-                                     'дон\", \"Роль журналист\" и т.п.'.format(a))
-                    elif rm == 'активация контракта':
-                        req[i - 1]['activity'] = rm
-                        if req[i - 1]['type'] == 'Активное действие':
-                            a = 4
-                        else:
-                            a = 6
-                        send_message(sender, '❄ [Шаг {}] Уточни используемый контракт.\nОбязательно! Начни со слова '
-                                             '\"Контракт\". Пример: \"Контракт иммунитет\", \"Контракт слежка\" и т.п.'.format(
-                            a))
-                    elif rm[:4] == 'роль' or rm[:8] == 'контракт':
-                        req[i - 1]['item'] = rm
-                        if req[i - 1]['type'] == 'Активное действие':
-                            a = 5
-                        else:
-                            a = 8
-                        send_message(sender,
-                                     '❄ [Шаг {}] На кого направлено твоё действие? Необходимо указать ссылку на '
-                                     'страницу выбранного игрока (в формате https://vk.com/id) и его имя. '
-                                     '\nПример: https://vk.com/nastya_vorobushek Кирена\nЕсли тебе нужно '
-                                     'указать двух игроков, также указывай сначала ссылки: '
-                                     'https://vk.com/nastya_vorobushek с Кирены https://vk.com/cherrss на '
-                                     'Черри\nЕсли ты хочешь сходить на себя, так и напиши: На себя. Указывать '
-                                     'на себя ссылку не нужно.\nЕсли ты используешь рацию, то напиши, на какую роль '
-                                     'ты её используешь. Пример: На революционера. На шпиона'.format(a))
-                    elif rm[:15] == 'https://vk.com/' or rm[:3] == 'на ':
-                        req[i - 1]['victim'] = received_message
-                        type_of = req[i - 1]['type'].capitalize()
-                        activity = req[i - 1]['activity'].capitalize()
-                        if req[i - 1]['item'][:4] == 'роль':
-                            item1 = 'Роль'
-                            item1_1 = 'роли'
-                            item2 = req[i - 1]['item'][5:].capitalize()
-                        else:
-                            item1 = 'Контракт'
-                            item1_1 = 'контракта'
-                            item2 = req[i - 1]['item'][9:].capitalize()
-                        victim = req[i - 1]['victim']
-                        host = req[i - 1]['host']
-                        try:
-                            phase = req[i - 1]['phase'].capitalize()
-                            condition = req[i - 1]['condition'].capitalize()
-                        except KeyError:
-                            phase, condition = '', ''
-
-                        if phase != '':
-                            send_message(sender, "Поздравляю, твоя заявка отправлена на рассмотрение! Твой ведущий "
-                                                 "напишет тебе, как только она будет принята. Напомню, "
-                                                 "что ты совершаешь следующее: \n\n{} — {}\nВремя отсутствия: {}\n"
-                                                 "Условие исполнения: {}\nИсполнить: Действие {} {}\nНа кого: {}".format(
-                                type_of, activity, phase, condition, item1_1, item2, victim))
-                            for admin in admins:
-                                send_message(admin, "Новая заявка (распоряжение на время отсутствия)\n{} vk.com/id{} "
-                                                    "\nДиалог: vk.com/gim{}?sel={}\n\n "
-                                                    "Ведущий: {}\n\nВремя отсутствия: {}\n\nУсловие исполнения: "
-                                                    "{}\n\nДействие: {}\n\n{}: {}\n\nНа кого: {}".format(
-                                    sayer_name, sender, group, sender, host, phase, condition, activity, item1, item2,
-                                    victim))
-                        else:
-                            send_message(sender, "Поздравляю, твоя заявка отправлена на рассмотрение! Твой ведущий "
-                                                 "напишет тебе, как только она будет принята. Напомню, что ты "
-                                                 "совершаешь следующее: \n\n{} — {}\nИсполнить: Действие {} {}\nНа кого: {}".format(
-                                type_of, activity, item1_1, item2, victim))
-                            for admin in admins:
-                                send_message(admin, "Новая заявка\n{} vk.com/id{}\nДиалог: "
-                                                    "vk.com/gim{}?sel={}\n\nВедущий: {}\n\nДействие: {}\n\n"
-                                                    "{}: {}\n\nНа кого: {}".format(
-                                    sayer_name, sender, group, sender, host, activity, item1, item2, victim))
-                        req.pop(i - 1)
+        elif received_message == "Войти в Заколдованный лес":
+            for i in range(len(riddle)):
+                sender_id = riddle[i - 1][0]
+                if sender_id == sender:
+                    riddle.pop(i - 1)
                     break
+            riddle.append([sender])  # creating player's slot
+            keyboard = VkKeyboard(inline=True)
+            keyboard.add_button('Налево')
+            keyboard.add_line()
+            keyboard.add_button('Прямо')
+            keyboard.add_line()
+            keyboard.add_button('Направо')
+            send_button(sender, "Малефисента стоит у самой опушки Заколдованного леса. Она ждала тебя...\n— Помни, "
+                                "что, войдя, тебе нужно продолжать идти лишь по правильному пути. Однажды свернув не "
+                                "туда, ты будешь встречать на своём пути лишь миражи, отголоски реальности. Любой "
+                                "неверный поворот приведёт тебя обратно ко мне...\n* * * \nТёмные деревья возвышаются "
+                                "над твоей головой, угрожающе шелестят своими кронами. И чем больше ты всматриваешься "
+                                "вглубь леса, тем темнее он кажется.\nЧто-то мерцает под твоими ногами, ты опускаешь "
+                                "взгляд и видишь дорогу из жёлтого кирпича, змеящуюся между деревьями. Что-то внутри "
+                                "подсказывает тебе, что волшебная тропинка приведёт тебя к твоей цели. Ещё несколько "
+                                "минут ты колеблешься и, наконец, делаешь несколько неуверенных шагов, скрываясь в "
+                                "тени деревьев.")
+        else:
+            if rm == 'направо' or rm == 'налево' or rm == 'прямо':
+                for i in range(len(riddle)):
+                    senders_id = riddle[i - 1][0]
+                    if senders_id == sender:
+                        riddle[i - 1].append(rm)
+                        if len(riddle[i - 1]) == 2:
+                            keyboard = VkKeyboard(inline=True)
+                            keyboard.add_button('Налево')
+                            keyboard.add_line()
+                            keyboard.add_button('Прямо')
+                            keyboard.add_line()
+                            keyboard.add_button('Направо')
+                            send_button(sender, "Пройдя вперёд несколько метров, ты оказываешься перед огромным "
+                                                "дубом. Тропинка теряется где-то в траве, её почти невозможно "
+                                                "разглядеть. Зато твой взгляд цепляется за пиратскую шляпу. Первое, "
+                                                "что тебе хочется сделать – подобрать её и рассмотреть поближе.\n– "
+                                                "Даже не думай, – холодная сталь шпаги касается твоего горла. – А, "
+                                                "так это ты…\nКапитан Крюк убирает оружие в ножны и подбирает с земли "
+                                                "шляпу.\n– Заблудился? Что ж, слушай внимательно, я подскажу, "
+                                                "как выбрать правильный путь, – мужчина поправляет на голове шляпу, "
+                                                "нарочито долго, словно пытается что-то вспомнить. – Ах да. Здесь путь "
+                                                "расходится — яма мешает. Обойди.")
+                        elif len(riddle[i - 1]) == 3:
+                            keyboard = VkKeyboard(inline=True)
+                            keyboard.add_button('Налево')
+                            keyboard.add_line()
+                            keyboard.add_button('Прямо')
+                            keyboard.add_line()
+                            keyboard.add_button('Направо')
+                            send_button(sender, "Лес становится всё гуще, над тобой уже почти не видно света, "
+                                                "как вдруг ты видишь где-то далеко впереди яркий синий огонёк. Ты "
+                                                "бежишь к нему, и редкие опавшие листья хрустят под твоими ногами. "
+                                                "Уже на полпути ты понимаешь, что бежишь прямиком к Аиду.\n– Тот, "
+                                                "кто прокладывал эту дорогу, – начинает он, даже не дожидаясь, "
+                                                "пока ты задашь вопрос, – оставил здесь какие-то цифры.\nИ правда, "
+                                                "на дереве рядом с Аидом вырезано какое-то число. 151136316. Что это "
+                                                "значит?")
+                        elif len(riddle[i - 1]) == 4:
+                            keyboard = VkKeyboard(inline=True)
+                            keyboard.add_button('Налево')
+                            keyboard.add_line()
+                            keyboard.add_button('Прямо')
+                            keyboard.add_line()
+                            keyboard.add_button('Направо')
+                            send_button(sender, "Уже на следующем крутом повороте ты снова попадаешь на развилку. На "
+                                                "ней Круэлла, она сидит на большом камне, скучающе покачивая "
+                                                "ногами.\n– О, наконец-то, а я уже заждалась! – девушка соскочила на "
+                                                "землю. – Давай прочитаем это вместе. Тут написано: «Прямо пойдёшь – "
+                                                "смерть свою встретишь, налево пойдёшь – поймаешь судьбу, "
+                                                "а направо пойдёшь – на праздник попадёшь». Тебе это как-то "
+                                                "помогло?\nПомогло ли?..")
+                        elif len(riddle[i - 1]) == 5:
+                            keyboard = VkKeyboard(inline=True)
+                            keyboard.add_button('Налево')
+                            keyboard.add_line()
+                            keyboard.add_button('Прямо')
+                            keyboard.add_line()
+                            keyboard.add_button('Направо')
+                            send_button(sender, "Вокруг тебя начинают летать светлячки. Казалось, что время в "
+                                                "Заколдованном лесу идёт в своём, необъяснимом темпе... Задумавшись "
+                                                "об этом, ты не замечаешь, как перед тобой появляется Червонная "
+                                                "Королева. От неожиданности ты не знаешь, что сказать, зависая, "
+                                                "как старый компьютер, но и Трики "
+                                                "молчит, смотря на тебя как-то оценивающе.\nКак только ты "
+                                                "приоткрываешь рот, она перебивает тебя:\n– Егкт дуае, – говорит она "
+                                                "совершенно отчётливо, и тебе вдруг кажется, что у тебя начались "
+                                                "глюки. – Повторять я для тебя не собираюсь.\nОстаётся только думать...")
+                        elif len(riddle[i - 1]) == 6:
+                            keyboard = VkKeyboard(inline=True)
+                            keyboard.add_button('Налево')
+                            keyboard.add_line()
+                            keyboard.add_button('Прямо')
+                            keyboard.add_line()
+                            keyboard.add_button('Направо')
+                            send_button(sender, "Лес вокруг тебя словно замолкает... Злая Королева стоит неподвижно, "
+                                                "прикрыв глаза, и ты чувствуешь, как по твоему телу проходят мурашки "
+                                                "от того, какая тишина стоит вокруг.\n– Я ждала тебя, "
+                                                "– Эви протягивает тебе тонкую бумажку. Ты раскрываешь её, "
+                                                "а на ней...\n– Снова числа, – недовольно говоришь ты, "
+                                                "смотря на надпись «5699995555».\nИ что это вообще такое?")
+                        elif len(riddle[i - 1]) == 7:
+                            keyboard = VkKeyboard(inline=True)
+                            keyboard.add_button('Налево')
+                            keyboard.add_line()
+                            keyboard.add_button('Прямо')
+                            keyboard.add_line()
+                            keyboard.add_button('Направо')
+                            send_button(sender, "В конце пути – как подсказывает тебе шестое чувство – тебя ждёт "
+                                                "Снежная Королева.\n– Доверься своей интуиции. Иди туда, "
+                                                "куда тебя ведёт твоё сердце и желание дойти до конца...\nЖенщина "
+                                                "замолкает и выжидающе смотрит на тебя, ожидая решения.\nНу... куда "
+                                                "идём?")
+                        elif len(riddle[i - 1]) == 8:
+                            if riddle[i - 1][1] == 'прямо' and riddle[i - 1][2] == 'прямо' and riddle[i - 1][3] == 'налево' and riddle[i - 1][4] == 'направо' and riddle[i - 1][5] == 'налево' and riddle[i - 1][6] == 'прямо' and riddle[i - 1][7] == 'налево':
+                                send_message(sender, 'Ещё через пять минут ты находишь выход из леса... И '
+                                                     'обнаруживаешь, что стоишь на Зеркальной поляне. Как ни странно, '
+                                                     'ты сразу понимаешь, что надо сделать.\n– Свет мой зеркальце, '
+                                                     'скажи... Кто прячет свой истинный образ Деда Мороза и '
+                                                     'Снегурочки?\nЗеркало тянется лёгкой дымкой, и перед тобой '
+                                                     'появляются два отражения: Железного дровосека и Питера Пена. '
+                                                     'Вот так неожиданность...')
+                            else:
+                                keyboard = VkKeyboard(inline=True)
+                                keyboard.add_button('Войти в Заколдованный лес')
+                                send_button(sender, 'Ещё через пять минут ты находишь выход из леса... Но это совсем '
+                                                     'не тот выход, который тебе бы хотелось найти.\nТы стоишь на той '
+                                                     'же самой опушке, с которой всё и начиналось. Кажется, '
+                                                     'следует вернуться к Малефисенте, чтобы достичь цели '
+                                                     'путешествия... И в этот раз нужно идти осторожнее и '
+                                                     'внимательнее.')
+                            riddle.pop(i - 1)
+            else:
+                for i in range(len(req)):
+                    sender_id = req[i - 1]['sender']
+                    if sender_id == sender:  # clarify if they're making a request
+                        if rm == 'черри' or rm == 'джо' or rm == 'трики' or rm == 'тропа' or rm == 'нат':
+                            req[i - 1]['host'] = rm.capitalize()
+                            keyboard = VkKeyboard(inline=True)
+                            keyboard.add_button('Активное действие')
+                            keyboard.add_line()
+                            keyboard.add_button('Распоряжение')
+                            send_button(sender, "❄ [Шаг 2] Что тебя интересует в этот раз?")
+                        elif rm == 'активное действие':
+                            req[i - 1]['type'] = 'Активное действие'
+                            keyboard = VkKeyboard(inline=True)
+                            keyboard.add_button('Ход роли')
+                            keyboard.add_line()
+                            keyboard.add_button('Активация контракта')
+                            send_button(sender, "❄ [Шаг 3] Какое действие ты хочешь совершить?")
+                        elif rm == 'распоряжение':
+                            req[i - 1]['type'] = 'Распоряжение на время отсутствия'
+                            keyboard = VkKeyboard(inline=True)
+                            keyboard.add_button('День')
+                            keyboard.add_button('Ночь')
+                            send_button(sender, '❄ [Шаг 3] Уточни фазу, в которую ты будешь отсутствовать.')
+                        elif rm[:4] == 'день' or rm[:4] == 'ночь':
+                            req[i - 1]['phase'] = rm
+                            send_message(sender,
+                                         "❄ [Шаг 4] На какой случай ты оставляешь распоряжение. \nОбязательно! Начни со "
+                                         "слова \"Если\". Пример: если в меня будут стрелять. Если будут убивать "
+                                         "члена моей команды. Если меня будут проверять и т.п.")
+                        elif rm[:4] == 'если':
+                            req[i - 1]['condition'] = rm
+                            keyboard = VkKeyboard(inline=True)
+                            keyboard.add_button('Ход роли')
+                            keyboard.add_line()
+                            keyboard.add_button('Активация контракта')
+                            send_button(sender, "❄ [Шаг 5] Какое действие нужно исполнить?")
+                        elif rm == 'ход роли':
+                            req[i - 1]['activity'] = rm
+                            if req[i - 1]['type'] == 'Активное действие':
+                                a = 4
+                            else:
+                                a = 6
+                            send_message(sender,
+                                         '❄ [Шаг {}] Уточни свою роль.\nОбязательно! Начни со слова \"Роль\". Пример: \"Роль '
+                                         'дон\", \"Роль журналист\" и т.п.'.format(a))
+                        elif rm == 'активация контракта':
+                            req[i - 1]['activity'] = rm
+                            if req[i - 1]['type'] == 'Активное действие':
+                                a = 4
+                            else:
+                                a = 6
+                            send_message(sender, '❄ [Шаг {}] Уточни используемый контракт.\nОбязательно! Начни со слова '
+                                                 '\"Контракт\". Пример: \"Контракт иммунитет\", \"Контракт слежка\" и т.п.'.format(
+                                a))
+                        elif rm[:4] == 'роль' or rm[:8] == 'контракт':
+                            req[i - 1]['item'] = rm
+                            if req[i - 1]['type'] == 'Активное действие':
+                                a = 5
+                            else:
+                                a = 8
+                            send_message(sender,
+                                         '❄ [Шаг {}] На кого направлено твоё действие? Необходимо указать ссылку на '
+                                         'страницу выбранного игрока (в формате https://vk.com/id) и его имя. '
+                                         '\nПример: https://vk.com/nastya_vorobushek Кирена\nЕсли тебе нужно '
+                                         'указать двух игроков, также указывай сначала ссылки: '
+                                         'https://vk.com/nastya_vorobushek с Кирены https://vk.com/cherrss на '
+                                         'Черри\nЕсли ты хочешь сходить на себя, так и напиши: На себя. Указывать '
+                                         'на себя ссылку не нужно.\nЕсли ты используешь рацию, то напиши, на какую роль '
+                                         'ты её используешь. Пример: На революционера. На шпиона'.format(a))
+                        elif rm[:15] == 'https://vk.com/' or rm[:3] == 'на ':
+                            req[i - 1]['victim'] = received_message
+                            type_of = req[i - 1]['type'].capitalize()
+                            activity = req[i - 1]['activity'].capitalize()
+                            if req[i - 1]['item'][:4] == 'роль':
+                                item1 = 'Роль'
+                                item1_1 = 'роли'
+                                item2 = req[i - 1]['item'][5:].capitalize()
+                            else:
+                                item1 = 'Контракт'
+                                item1_1 = 'контракта'
+                                item2 = req[i - 1]['item'][9:].capitalize()
+                            victim = req[i - 1]['victim']
+                            host = req[i - 1]['host']
+                            try:
+                                phase = req[i - 1]['phase'].capitalize()
+                                condition = req[i - 1]['condition'].capitalize()
+                            except KeyError:
+                                phase, condition = '', ''
+
+                            if phase != '':
+                                send_message(sender, "Поздравляю, твоя заявка отправлена на рассмотрение! Твой ведущий "
+                                                     "напишет тебе, как только она будет принята. Напомню, "
+                                                     "что ты совершаешь следующее: \n\n{} — {}\nВремя отсутствия: {}\n"
+                                                     "Условие исполнения: {}\nИсполнить: Действие {} {}\nНа кого: {}".format(
+                                    type_of, activity, phase, condition, item1_1, item2, victim))
+                                for admin in admins:
+                                    send_message(admin, "Новая заявка (распоряжение на время отсутствия)\n{} vk.com/id{} "
+                                                        "\nДиалог: vk.com/gim{}?sel={}\n\n "
+                                                        "Ведущий: {}\n\nВремя отсутствия: {}\n\nУсловие исполнения: "
+                                                        "{}\n\nДействие: {}\n\n{}: {}\n\nНа кого: {}".format(
+                                        sayer_name, sender, group, sender, host, phase, condition, activity, item1, item2,
+                                        victim))
+                            else:
+                                send_message(sender, "Поздравляю, твоя заявка отправлена на рассмотрение! Твой ведущий "
+                                                     "напишет тебе, как только она будет принята. Напомню, что ты "
+                                                     "совершаешь следующее: \n\n{} — {}\nИсполнить: Действие {} {}\nНа кого: {}".format(
+                                    type_of, activity, item1_1, item2, victim))
+                                for admin in admins:
+                                    send_message(admin, "Новая заявка\n{} vk.com/id{}\nДиалог: "
+                                                        "vk.com/gim{}?sel={}\n\nВедущий: {}\n\nДействие: {}\n\n"
+                                                        "{}: {}\n\nНа кого: {}".format(
+                                        sayer_name, sender, group, sender, host, activity, item1, item2, victim))
+                            req.pop(i - 1)
+                        break
