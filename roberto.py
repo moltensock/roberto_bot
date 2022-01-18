@@ -20,20 +20,20 @@ immune1 = "Иммунитет\nФаза активации: дневная\nДе
           "синьориной Кэнди, и единоразово синьорина Кэнди подарит тебе экскурсию по своему заведению. Это время ты " \
           "проведёшь безопасно… и сладко.\nДополнительно: можно использовать как на себя, так и на другого игрока. " \
           "Активируется только в дневную фазу. При активации контракта вы, или другой игрок, на которого вы " \
-          "активируете контракт, будете под защитой от любого воздействия – лечение, убийство, проверка, и так далее, " \
-          "но, если у вас активная дневная роль и фаза активации совпала с ходом вашей роли, вы также не сможете " \
+          "активируете контракт, будете под защитой от любого воздействия – лечение, убийство, проверка, и так далее," \
+          " но, если у вас активная дневная роль и фаза активации совпала с ходом вашей роли, вы также не сможете " \
           "совершать каких-либо действий. Контракт лишает вас права голоса на дневном голосовании. "
 vote1 = "Дополнительные голоса\nФаза активации: дневная\nДействие контракта: ты заключишь контракт с синьором " \
         "Питером, и единоразово он внесёт правки в листы " \
-        "голосования, добавив шесть голосов к твоему голосу.\nДополнительно: голоса можно активировать только на того " \
-        "игрока, против которого вы голосовали. "
+        "голосования, добавив шесть голосов к твоему голосу.\nДополнительно: голоса можно активировать только на того" \
+        " игрока, против которого вы голосовали. "
 
 import vk_api
 from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.utils import get_random_id
-from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api import VkUpload
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
+import datetime
 
 
 def send_message(sender, message):
@@ -108,9 +108,34 @@ def finally_end():
 
 people = []
 req = []
-shop = []
+shop = [{'sender': 313354983,
+         'balance': 1000,
+         'is_true_sides': 0,
+         'is_true_deaths': 0},
+        {'sender': 605574836,
+         'balance': 1000,
+         'is_true_sides': 0,
+         'is_true_deaths': 0},
+        {'sender': 263861517,
+         'balance': 1000,
+         'is_true_sides': 0,
+         'is_true_deaths': 0},
+        {'sender': 447434376,
+         'balance': 1000,
+         'is_true_sides': 0,
+         'is_true_deaths': 0},
+        {'sender': 338010077,
+         'balance': 1000,
+         'is_true_sides': 0,
+         'is_true_deaths': 0}
+        ]
+total = []
 group = 210073314
 au = 0
+totalize = 0
+totalize_max = 0
+totalize_side = 0
+total_side = 'ТОТАЛИЗАТОР НА СТОРОНЫ:\n'
 
 token = "8d5b1a0549cd3d9528bfeccce5db1d8672f8c256a46822defab1aa2d83e4e6a177505a23a58283710742c"
 authorize = vk_api.VkApi(token=token)
@@ -273,7 +298,7 @@ for event in longpoll.listen():
                     message = f'Твой баланс: {bal} деллик{ending}'
                     send_message(sender, message)
             if ex == 0:
-                shop.append(dict(sender=sender, balance=0))  # creating player's slot
+                shop.append(dict(sender=sender, balance=0, is_true_sides=0, is_true_deaths=0))  # creating player's slot
                 send_message(sender, 'Поздравляю, у тебя появился кошелёк. Держи ухо востро: скоро там появятся '
                                      'деньги! Если они, конечно, у тебя были...')
         elif rm[:2] == 'id':
@@ -282,10 +307,10 @@ for event in longpoll.listen():
                     rm = rm[2:]
                     k = rm.split(' ')
                     ending1 = find_ending(k[1])
-                    for i in range(len(shop)):
-                        if shop[i - 1]['sender'] == int(k[0]):
-                            shop[i - 1]['balance'] += int(k[1])
-                            bal = shop[i - 1]['balance']
+                    for j in range(len(shop)):
+                        if shop[j - 1]['sender'] == int(k[0]):
+                            shop[j - 1]['balance'] += int(k[1])
+                            bal = shop[j - 1]['balance']
                             ending2 = find_ending(bal)
                             message = f'Твой счёт пополнен на {k[1]} деллик{ending1}. Текущий баланс: {bal} деллик{ending2}'
                             adm = f'Баланс игрока vk.com/id{k[0]} пополнен на {k[1]} деллик{ending1}'
@@ -297,26 +322,168 @@ for event in longpoll.listen():
             keyboard.add_button('Афера')
             keyboard.add_button('Кукла Вуду')
             keyboard.add_line()
-            keyboard.add_button('Бондаж')
-            keyboard.add_button('Прослушка')
+            keyboard.add_button('Бондаж', color=VkKeyboardColor.PRIMARY)
+            keyboard.add_button('Прослушка', color=VkKeyboardColor.PRIMARY)
             keyboard.add_line()
             keyboard.add_button('Проклятие')
             keyboard.add_button('Амулет')
             keyboard.add_line()
-            keyboard.add_button('Больше предметов')
+            keyboard.add_button('Больше предметов', color=VkKeyboardColor.PRIMARY)
             send_button(sender, "текст текст текст текст текст текст текст текст текст текст текст")
         elif rm == 'больше предметов':
             keyboard = VkKeyboard(inline=True)
             keyboard.add_button('Заказная статья')
             keyboard.add_line()
-            keyboard.add_button('Бутылка водки')
+            keyboard.add_button('Бутылка водки', color=VkKeyboardColor.PRIMARY)
             keyboard.add_line()
             keyboard.add_button('Сыворотка правды')
             keyboard.add_line()
-            keyboard.add_button('Убийство проверяющего')
+            keyboard.add_button('Убийство проверяющего', color=VkKeyboardColor.PRIMARY)
             keyboard.add_line()
             keyboard.add_button('Вернуться к списку предметов')
             send_button(sender, "текст текст текст текст текст текст текст текст текст текст текст")
+        elif rm[:13] == 'обнулить банк':
+            rm = rm[14:]
+            for i in range(len(admins)):
+                if sender == admins[i]:
+                    if rm == 'смертей':
+                        totalize = 0
+                        total = []
+                        totalize_max = 0
+                        for i in range(len(shop)):
+                            shop[i - 1]['is_true_deaths'] = 0
+                        send_message(sender, 'Банк тотализатора смертей обнулён. Мы готовы к новой фазе!')
+                    elif rm == 'сторон':
+                        totalize_side = 0
+                        total_side = 'ТОТАЛИЗАТОР НА СТОРОНЫ:\n'
+                        for i in range(len(shop)):
+                            shop[i - 1]['is_true_sides'] = 0
+                        send_message(sender, 'Банк тотализатора сторон обнулён. Мы готовы к новой фазе!')
+        elif rm[:14] == 'обнулить людей':
+            rm = rm[15:]
+            for i in range(len(admins)):
+                if sender == admins[i]:
+                    if rm == 'смерти':
+                        total = []
+                        totalize_max = 0
+                        for i in range(len(shop)):
+                            shop[i - 1]['is_true_deaths'] = 0
+                        send_message(sender, 'Банк тотализатора смертей сохранён. Мы готовы к новой фазе!')
+                    elif rm == 'стороны':
+                        total_side = 'ТОТАЛИЗАТОР НА СТОРОНЫ:\n'
+                        for i in range(len(shop)):
+                            shop[i - 1]['is_true_sides'] = 0
+                        send_message(sender, 'Банк тотализатора сторон сохранён. Мы готовы к новой фазе!')
+        elif rm == 'ставки тотализатора':
+            for k in range(len(admins)):
+                if sender == admins[k]:
+                    itogs = 'СПИСОК АЗАРТНЫХ ИГРОКОВ:\n\n'
+                    print(total)
+                    for i in range(totalize_max + 1):
+                        for j in range(len(total)):
+                            if total[j - 1][1] == i:
+                                itogs += f'{i}: {total[j - 1][0]}\n'
+                        itogs += '\n'
+                    itogs += '\n' + total_side
+                    send_message(sender, itogs)
+        elif rm == 'тотализатор' or rm == 'количество смертей' or rm == 'стороны умерших' or rm[:6] == 'вангую' or rm == 'cветлые' or rm == 'cерые' or rm == 'tёмные' or rm == 'cветлые и тёмные' or rm == 'cерые и светлые' or rm == 'tёмные и серые' or rm == 'bсе стороны':
+            hour = int(datetime.datetime.today().strftime('%H'))
+            # minute = int(datetime.datetime.today().strftime('%M'))
+            if hour == 1 or hour == 16:
+                if rm == 'тотализатор':
+                    keyboard = VkKeyboard(inline=True)
+                    keyboard.add_button('Количество смертей')
+                    keyboard.add_line()
+                    keyboard.add_button('Стороны умерших', color=VkKeyboardColor.PRIMARY)
+                    send_button(sender, 'На что ты хочешь поставить?')
+                elif rm == 'стороны умерших':
+                    keyboard = VkKeyboard(inline=True)
+                    keyboard.add_button('Cветлые')
+                    keyboard.add_button('Tёмные')
+                    keyboard.add_line()
+                    keyboard.add_button('Cерые', color=VkKeyboardColor.PRIMARY)
+                    keyboard.add_line()
+                    keyboard.add_button('Cветлые и тёмные')
+                    keyboard.add_line()
+                    keyboard.add_button('Cерые и светлые', color=VkKeyboardColor.PRIMARY)
+                    keyboard.add_line()
+                    keyboard.add_button('Tёмные и серые')
+                    keyboard.add_line()
+                    keyboard.add_button('Bсе стороны', color=VkKeyboardColor.PRIMARY)
+                    send_button(sender, 'Выбери, кто сегодня потеряет игроков (стоимость ставки: 5 делликов):')
+                    # for i in range(len(shop)):
+                    #     if shop[i - 1]['sender'] == sender:
+                    #         shop[i - 1]['is_true_sides'] = 1
+                elif rm == 'cветлые' or rm == 'cерые' or rm == 'tёмные' or rm == 'cветлые и тёмные' or rm == 'cерые и светлые' or rm == 'tёмные и серые' or rm == 'bсе стороны':
+                    for i in range(len(shop)):
+                        if shop[i - 1]['sender'] == sender:
+                            if shop[i - 1]['is_true_sides'] == 0:
+                                if shop[i - 1]['balance'] - 5 >= 0:
+                                    shop[i - 1]['balance'] -= 5
+                                    bal = shop[i - 1]['balance']
+                                    totalize_side += 5
+                                    total_side += f'{sayer_name}\n — {rm.capitalize()}'
+                                    ending = find_ending(shop[i - 1]['balance'])
+                                    send_message(sender, f'Твоя ставка: {rm.capitalize()} потеряют игрока. '
+                                              f'Текущий баланс: {bal} деллик{ending}. Спасибо за участие и да пребудет с '
+                                              f'тобой удача! ')
+                                    shop[i - 1]['is_true_sides'] = 1
+                                    ending2 = find_ending(totalize_side)
+                                    for admin in admins:
+                                        mes = f'Новая ставка в тотализатор (стороны)\n{sayer_name} vk.com/id{sender}\n\nСторона: {rm.capitalize()}\nТекущий банк: {totalize_side} деллик{ending2} '
+                                        send_message(admin, mes)
+                                else:
+                                    send_message(sender,
+                                                 'На твоём счёте недостаточно делликов для участия. Попробуй уменьшить ставку!')
+                            else:
+                                send_message(sender, 'Твоя ставка уже учтена! Приходи в следующий раз.')
+                elif rm == 'количество смертей':
+                    for i in range(len(shop)):
+                        if shop[i - 1]['sender'] == sender:
+                            ending = find_ending(shop[i - 1]['balance'])
+                            bal = shop[i - 1]['balance']
+                            message = f'Твой баланс: {bal} деллик{ending}. Напиши \"Вангую [число смертей] [' \
+                                      f'ставка в делликах]\", чтобы участвовать в тотализаторе на итоги. Пример: ' \
+                                      f'Вангую 3 10 — для ставки в размере 10 делликов на смерть 3 игроков.'
+                            send_message(sender, message)
+                elif rm[:6] == 'вангую':
+                    rm = rm[7:]
+                    try:
+                        rm = rm.split(' ')
+                    except IndexError:
+                        send_message(sender, 'Ой! Что-то пошло не так...')
+                    except ValueError:
+                        send_message(sender, 'Ой! Что-то пошло не так...')
+                    for i in range(len(shop)):
+                        if shop[i - 1]['sender'] == sender:
+                            print('k')
+                            if shop[i - 1]['is_true_deaths'] == 0:
+                                print('a')
+                                ending1 = find_ending(rm[1])
+                                if shop[i - 1]['balance'] - int(rm[1]) >= 0 and int(rm[1]) > 0:
+                                    shop[i - 1]['balance'] -= int(rm[1])
+                                    totalize += int(rm[1])
+                                    shop[i - 1]['is_true_deaths'] = 1
+                                    total.append([sayer_name, int(rm[0])])
+                                    if int(rm[1]) > totalize_max:
+                                        totalize_max = int(rm[1])
+                                    ending3 = find_ending(totalize)
+                                    ending2 = find_ending(shop[i - 1]['balance'])
+                                    bal = shop[i - 1]['balance']
+                                    message = f'Твоя ставка: {rm[1]} деллик{ending1}. Количество смертей: {rm[0]}. ' \
+                                              f'Текущий баланс: {bal} деллик{ending2}. Спасибо за участие и да пребудет с ' \
+                                              f'тобой удача! '
+                                    send_message(sender, message)
+                                    for admin in admins:
+                                        mes = f'Новая ставка в тотализатор (смерти)\n{sayer_name} vk.com/id{sender}\n\nРазмер ' \
+                                              f'ставки: {rm[1]} деллик{ending1}\nКоличество смертей: {rm[0]}\n\nТекущий банк: {totalize} деллик{ending3} '
+                                        send_message(admin, mes)
+                                else:
+                                    send_message(sender, 'На твоём счёте недостаточно делликов для участия. Попробуй уменьшить ставку!')
+                            elif shop[i - 1]['is_true_deaths'] == 1:
+                                send_message(sender, 'Твоя ставка уже учтена! Приходи в следующий раз.')
+            else:
+                send_message(sender, 'Тотализатор пока не работает. Попробуй позже')
         else:
             for i in range(len(req)):
                 sender_id = req[i - 1]['sender']
