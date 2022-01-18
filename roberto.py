@@ -386,7 +386,8 @@ for event in longpoll.listen():
                         itogs += '\n'
                     itogs += '\n' + total_side
                     send_message(sender, itogs)
-        elif rm == 'тотализатор' or rm == 'количество смертей' or rm == 'стороны умерших' or rm[:6] == 'вангую' or rm == 'cветлые' or rm == 'cерые' or rm == 'tёмные' or rm == 'cветлые и тёмные' or rm == 'cерые и светлые' or rm == 'tёмные и серые' or rm == 'bсе стороны':
+        elif rm == 'тотализатор' or rm == 'количество смертей' or rm == 'стороны умерших' or rm[
+                                                                                             :6] == 'вангую' or rm == 'cветлые' or rm == 'cерые' or rm == 'tёмные' or rm == 'cветлые и тёмные' or rm == 'cерые и светлые' or rm == 'tёмные и серые' or rm == 'bсе стороны':
             hour = int(datetime.datetime.today().strftime('%H'))
             # minute = int(datetime.datetime.today().strftime('%M'))
             if hour == 1 or hour == 16:
@@ -425,8 +426,8 @@ for event in longpoll.listen():
                                     total_side += f'{sayer_name}\n — {rm.capitalize()}'
                                     ending = find_ending(shop[i - 1]['balance'])
                                     send_message(sender, f'Твоя ставка: {rm.capitalize()} потеряют игрока. '
-                                              f'Текущий баланс: {bal} деллик{ending}. Спасибо за участие и да пребудет с '
-                                              f'тобой удача! ')
+                                                         f'\nТекущий баланс: {bal} деллик{ending}.\nСпасибо за участие '
+                                                         f'и да пребудет с тобой удача! ')
                                     shop[i - 1]['is_true_sides'] = 1
                                     ending2 = find_ending(totalize_side)
                                     for admin in admins:
@@ -434,7 +435,8 @@ for event in longpoll.listen():
                                         send_message(admin, mes)
                                 else:
                                     send_message(sender,
-                                                 'На твоём счёте недостаточно делликов для участия. Попробуй уменьшить ставку!')
+                                                 'На твоём счёте недостаточно делликов для участия. Попробуй '
+                                                 'уменьшить ставку!')
                             else:
                                 send_message(sender, 'Твоя ставка уже учтена! Приходи в следующий раз.')
                 elif rm == 'количество смертей':
@@ -470,16 +472,19 @@ for event in longpoll.listen():
                                     ending3 = find_ending(totalize)
                                     ending2 = find_ending(shop[i - 1]['balance'])
                                     bal = shop[i - 1]['balance']
-                                    message = f'Твоя ставка: {rm[1]} деллик{ending1}. Количество смертей: {rm[0]}. ' \
-                                              f'Текущий баланс: {bal} деллик{ending2}. Спасибо за участие и да пребудет с ' \
-                                              f'тобой удача! '
+                                    message = f'Твоя ставка: {rm[1]} деллик{ending1}. Количество смертей: {rm[0]}.\n ' \
+                                              f'Текущий баланс: {bal} деллик{ending2}.\nСпасибо за участие и да ' \
+                                              f'пребудет с тобой удача! '
                                     send_message(sender, message)
                                     for admin in admins:
                                         mes = f'Новая ставка в тотализатор (смерти)\n{sayer_name} vk.com/id{sender}\n\nРазмер ' \
-                                              f'ставки: {rm[1]} деллик{ending1}\nКоличество смертей: {rm[0]}\n\nТекущий банк: {totalize} деллик{ending3} '
+                                              f'ставки: {rm[1]} деллик{ending1}\nКоличество смертей: {rm[0]}\n\n' \
+                                              f'Текущий банк: {totalize} деллик{ending3} '
                                         send_message(admin, mes)
                                 else:
-                                    send_message(sender, 'На твоём счёте недостаточно делликов для участия. Попробуй уменьшить ставку!')
+                                    send_message(sender,
+                                                 'На твоём счёте недостаточно делликов для участия. Попробуй '
+                                                 'уменьшить ставку!')
                             elif shop[i - 1]['is_true_deaths'] == 1:
                                 send_message(sender, 'Твоя ставка уже учтена! Приходи в следующий раз.')
             else:
