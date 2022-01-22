@@ -254,9 +254,9 @@ for event in longpoll.listen():
                                   f'\"Ставка [количество делликов]\" (без кавычек). Например: Ставка 10 — для ставки ' \
                                   f'в 10 делликов.\n\nДумай осторожно, второго шанса поставить у тебя не будет! '
                         send_message(sender, message)
-                        shop[i - 1]['side'] = rm.capitalize
+                        shop[i - 1]['side'] = rm.capitalize()
                     else:
-                        send_message(sender, 'Твоя ставка уже была принята! Надо было думать лучше!')
+                        send_message(sender, 'Больше ставку на победу стороны сделать нельзя! Надо было думать раньше!')
         elif rm[:7] == 'ставка ':
             rm = int(rm[7:])
             if bal >= rm:
@@ -265,14 +265,17 @@ for event in longpoll.listen():
                         if shop[i - 1]['side'] != '' and shop[i - 1]['stav'] == 0:
                             shop[i - 1]['balance'] -= rm
                             shop[i - 1]['stav'] = 1
-                            side = str(shop[i - 1]['side'])
+                            side = shop[i - 1]['side']
+                            print(side)
+                            side = side[0:-1]
                             player_balance = get_balance(sender)
-                            message = f'Твоя ставка на {side[:-1].capitalize()}х принята!\nТекущий {player_balance}'
+                            message = f'Твоя ставка на {side}х принята!\nТекущий {player_balance}'
                             send_message(sender, message)
                             for admin in admins:
                                 ending = find_ending(rm)
+                                side = shop[i - 1]['side']
                                 mes = f'Новая ставка на победу\n{sayer_name} vk.com/id{sender}\n\nРазмер ' \
-                                              f'ставки: {rm} деллик{ending}'
+                                              f'ставки: {rm} деллик{ending}\nСторона: {side}'
                                 send_message(admin, mes)
                         else:
                             send_message(sender, 'Больше ставить на победу стороны нельзя! Надо было думать раньше!')
@@ -553,7 +556,7 @@ for event in longpoll.listen():
                                     shop[i - 1]['balance'] -= 5
                                     player_balance = get_balance(sender)
                                     totalize_side += 5
-                                    total_side += f'{sayer_name}\n — {rm.capitalize()}'
+                                    total_side += f'{sayer_name} — {rm.capitalize()}\n'
                                     send_message(sender, f'Твоя ставка: {rm.capitalize()} потеряют игрока. '
                                                          f'\nТекущий {player_balance}.\nСпасибо за участие '
                                                          f'и да пребудет с тобой удача! ')
