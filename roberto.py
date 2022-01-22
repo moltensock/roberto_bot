@@ -109,6 +109,7 @@ def find_ending(num):
 
 
 def get_bal(sender_):
+    global shop
     sender_ = int(sender_)
     for s in range(len(shop)):
         if shop[s - 1]['sender'] == sender_:
@@ -116,9 +117,9 @@ def get_bal(sender_):
     return int(balance1)
 
 
-def get_balance(sender):
-    sender = int(sender)
-    player_balance = f'баланс: {get_bal(sender)} деллик{find_ending(get_bal(sender))}.'
+def get_balance(sender_):
+    sender_ = int(sender_)
+    player_balance = f'баланс: {get_bal(sender_)} деллик{find_ending(get_bal(sender_))}.'
     return player_balance
 
 
@@ -146,27 +147,37 @@ shop = [{'sender': 313354983,
          'balance': 1000,
          'is_true_sides': 0,
          'is_true_deaths': 0,
-         'items': 0},
+         'items': 0,
+         'side': '',
+         'stav': 0},
         {'sender': 605574836,
          'balance': 1000,
          'is_true_sides': 0,
          'is_true_deaths': 0,
-         'items': 0},
+         'items': 0,
+         'side': '',
+         'stav': 0},
         {'sender': 263861517,
          'balance': 1000,
          'is_true_sides': 0,
          'is_true_deaths': 0,
-         'items': 0},
+         'items': 0,
+         'side': '',
+         'stav': 0},
         {'sender': 447434376,
          'balance': 1000,
          'is_true_sides': 0,
          'is_true_deaths': 0,
-         'items': 0},
+         'items': 0,
+         'side': '',
+         'stav': 0},
         {'sender': 338010077,
          'balance': 1000,
          'is_true_sides': 0,
          'is_true_deaths': 0,
-         'items': 0}
+         'items': 0,
+         'side': '',
+         'stav': 0}
         ]
 total = []
 group = 210073314
@@ -189,9 +200,12 @@ for event in longpoll.listen():
         rm = received_message.lower()
         sender = event.user_id
         sayer_name = get_name(sender)
-
-        player_balance = get_balance(sender)
-        bal = get_bal(sender)
+        try:
+            player_balance = get_balance(sender)
+            bal = get_bal(sender)
+        except UnboundLocalError:
+            bal = 0
+            player_balance = ''
 
         if rm == "оформить заявку":
             for i in range(len(req)):
@@ -222,12 +236,60 @@ for event in longpoll.listen():
                                 "перелистывающего страницы потрёпанной книги. Роберто замечает тебя, лишь когда ты "
                                 "подходишь вплотную к прилавку, и поднимает на тебя ехидный взгляд.\n– Чем могу быть "
                                 "полезен?")
+        elif rm == 'ставка':
+            keyboard = VkKeyboard(inline=True)
+            keyboard.add_button('Cвeтлые')
+            keyboard.add_line()
+            keyboard.add_button('Tёмныe')
+            keyboard.add_line()
+            keyboard.add_button('Ceрые')
+            message = f'Выбери сторону, которая, по твоему мнению, одержит победу в этом сезоне:'
+            send_button(sender, message)
+        elif rm == 'cвeтлые' or rm == 'tёмныe' or rm == 'ceрые':
+            for i in range(len(shop)):
+                if shop[i - 1]['sender'] == sender:
+                    if shop[i - 1]['side'] == '' or shop[i - 1]['stav'] == 0:
+                        rm1 = rm[:-1].capitalize()
+                        message = f'Твой {player_balance} Укажи, сколько ты хочешь поставить на победу {rm1}х. Напиши ' \
+                                  f'\"Ставка [количество делликов]\" (без кавычек). Например: Ставка 10 — для ставки ' \
+                                  f'в 10 делликов.\n\nДумай осторожно, второго шанса поставить у тебя не будет! '
+                        send_message(sender, message)
+                        shop[i - 1]['side'] = rm.capitalize
+                    else:
+                        send_message(sender, 'Твоя ставка уже была принята! Надо было думать лучше!')
+        elif rm[:7] == 'ставка ':
+            rm = int(rm[7:])
+            if bal >= rm:
+                for i in range(len(shop)):
+                    if shop[i - 1]['sender'] == sender:
+                        if shop[i - 1]['side'] != '' and shop[i - 1]['stav'] == 0:
+                            shop[i - 1]['balance'] -= rm
+                            shop[i - 1]['stav'] = 1
+                            side = str(shop[i - 1]['side'])
+                            player_balance = get_balance(sender)
+                            message = f'Твоя ставка на {side[:-1].capitalize()}х принята!\nТекущий {player_balance}'
+                            send_message(sender, message)
+                            for admin in admins:
+                                ending = find_ending(rm)
+                                mes = f'Новая ставка на победу\n{sayer_name} vk.com/id{sender}\n\nРазмер ' \
+                                              f'ставки: {rm} деллик{ending}'
+                                send_message(admin, mes)
+                        else:
+                            send_message(sender, 'Больше ставить на победу стороны нельзя! Надо было думать раньше!')
+        elif rm == 'стоп ставки':
+            for j in range(len(admins)):
+                if sender == admins[j]:
+                    for i in range(len(shop)):
+                        if shop[i - 1]['stav'] != 1:
+                            shop[i - 1]['stav'] = 1
+                            shop[i - 1]['side'] = 'рип'
+                    send_message(sender, 'Ставки на победу стороны больше не принимаются.')
         elif rm == 'баланс':
-            try:
+            if player_balance[:6] == 'баланс':
                 player_balance = 'Твой ' + player_balance
                 send_message(sender, player_balance)
-            except NameError:
-                shop.append(dict(sender=sender, balance=0, is_true_sides=0, is_true_deaths=0, items=0))  # creating player's slot
+            else:
+                shop.append(dict(sender=sender, balance=0, is_true_sides=0, is_true_deaths=0, items=0, side='', stav=0))  # creating player's slot
                 send_message(sender, 'Поздравляю, у тебя появился кошелёк. Держи ухо востро: скоро там появятся '
                                      'деньги! Если они, конечно, у тебя были...')
                 for admin in admins:
@@ -238,20 +300,29 @@ for event in longpoll.listen():
                 if sender == admins[j]:
                     rm = rm[2:]
                     k = rm.split(' ')
-                    try:
-                        ending1 = find_ending(k[1])
+                    if k[1] == 'предмет':
                         for i in range(len(shop)):
                             if shop[i - 1]['sender'] == int(k[0]):
-                                shop[i - 1]['balance'] += int(k[1])
-                                player_balance = 'Текущий ' + get_balance(int(k[0]))
-                                message = f'Твой счёт пополнен на {k[1]} деллик{ending1}. {player_balance}'
-                                adm = f'Баланс игрока vk.com/id{k[0]} пополнен на {k[1]} деллик{ending1}'
-                                send_message(int(k[0]), message)
-                                send_message(sender, adm)
-                                send_message(313354983, adm)
-                                send_message(605574836, adm)
-                    except IndexError:
-                        send_message(sender, 'Ой... Будь осторожнее!')
+                                if shop[i - 1]['items'] == 1:
+                                    shop[i - 1]['items'] = 0
+                                    send_message(sender, 'Игрок {} использовал свой предмет'.format(k[0]))
+                                else:
+                                    send_message(sender, 'У этого игрока нет предмета')
+                    else:
+                        try:
+                            ending1 = find_ending(k[1])
+                            for i in range(len(shop)):
+                                if shop[i - 1]['sender'] == int(k[0]):
+                                    shop[i - 1]['balance'] += int(k[1])
+                                    player_balance = 'Текущий ' + get_balance(int(k[0]))
+                                    message = f'Твой счёт пополнен на {k[1]} деллик{ending1}. {player_balance}'
+                                    adm = f'Баланс игрока vk.com/id{k[0]} пополнен на {k[1]} деллик{ending1}'
+                                    send_message(int(k[0]), message)
+                                    send_message(sender, adm)
+                                    send_message(313354983, adm)
+                                    send_message(605574836, adm)
+                        except IndexError:
+                            send_message(sender, 'Ой... Будь осторожнее!')
         elif rm == 'магазин' or rm == 'вернуться к списку предметов':
             keyboard = VkKeyboard(inline=True)
             keyboard.add_button('Компромат')
@@ -289,47 +360,47 @@ for event in longpoll.listen():
                     keyboard.add_line()
                     keyboard.add_button('Kупить бутылку водки')
                 buying1 = vodka1
-            if rm == 'компромат' and isinstance(afer, str) is False:
+            elif rm == 'компромат' and isinstance(afer, str) is False:
                 if bal >= 30:
                     keyboard.add_line()
                     keyboard.add_button('Kупить компромат')
                 buying1 = afer1
-            if rm == 'кукла вуду' and isinstance(voodoo, str) is False:
+            elif rm == 'кукла вуду' and isinstance(voodoo, str) is False:
                 if bal >= 30:
                     keyboard.add_line()
                     keyboard.add_button('Kупить куклу Вуду')
                 buying1 = voodoo1
-            if rm == 'бондаж' and isinstance(ropes, str) is False:
+            elif rm == 'бондаж' and isinstance(ropes, str) is False:
                 if bal >= 30:
                     keyboard.add_line()
                     keyboard.add_button('Kупить бондаж')
                 buying1 = ropes1
-            if rm == 'прослушка' and isinstance(afer, str) is False:
+            elif rm == 'прослушка' and isinstance(bug, str) is False:
                 if bal >= 30:
                     keyboard.add_line()
                     keyboard.add_button('Kупить прослушку')
                 buying1 = bug1
-            if rm == 'порча' and isinstance(curse, str) is False:
+            elif rm == 'порча' and isinstance(curse, str) is False:
                 if bal >= 30:
                     keyboard.add_line()
                     keyboard.add_button('Kупить порчу')
                 buying1 = curse1
-            if rm == 'амулет' and isinstance(pure, str) is False:
+            elif rm == 'амулет' and isinstance(pure, str) is False:
                 if bal >= 30:
                     keyboard.add_line()
                     keyboard.add_button('Kупить амулет')
                 buying1 = pure1
-            if rm == 'заказная статья' and isinstance(jour, str) is False:
+            elif rm == 'заказная статья' and isinstance(jour, str) is False:
                 if bal >= 30:
                     keyboard.add_line()
                     keyboard.add_button('Kупить заказную статью')
                 buying1 = jour1
-            if rm == 'звонок киллеру' and isinstance(kill, str) is False:
+            elif rm == 'звонок киллеру' and isinstance(kill, str) is False:
                 if bal >= 30:
                     keyboard.add_line()
                     keyboard.add_button('Kупить звонок киллеру')
                 buying1 = kill1
-            if rm == 'сыворотка правды' and isinstance(truth, str) is False:
+            elif rm == 'сыворотка правды' and isinstance(truth, str) is False:
                 if bal >= 30:
                     keyboard.add_line()
                     keyboard.add_button('Kупить сыворотку правды')
@@ -337,71 +408,74 @@ for event in longpoll.listen():
 
             send_button(sender, buying1)
         elif rm[:6] == 'kупить':
-            if bal >= 30:
-                for i in range(len(shop)):
-                    if shop[i - 1]['sender'] == sender:
-                        if shop[i - 1]['items'] == 0:
-                            rm = rm[7:]
-                            if rm == 'бутылку водки' and isinstance(vodka, str) is False:
-                                complete = buying(sender, vodka_end)
-                                vodka -= 1
-                                if vodka == 0:
-                                    vodka = 'SOLD OUT'
-                            if rm == 'компромат' and isinstance(afer, str) is False:
-                                complete = buying(sender, afer_end)
-                                afer -= 1
-                                if afer == 0:
-                                    afer = 'SOLD OUT'
-                            if rm == 'куклу вуду' and isinstance(voodoo, str) is False:
-                                complete = buying(sender, voodoo_end)
-                                voodoo -= 1
-                                if voodoo == 0:
-                                    voodoo = 'SOLD OUT'
-                            if rm == 'бондаж' and isinstance(ropes, str) is False:
-                                complete = buying(sender, ropes_end)
-                                ropes -= 1
-                                if ropes == 0:
-                                    ropes = 'SOLD OUT'
-                            if rm == 'прослушку' and isinstance(afer, str) is False:
-                                complete = buying(sender, bug_end)
-                                bug -= 1
-                                if bug == 0:
-                                    bug = 'SOLD OUT'
-                            if rm == 'порчу' and isinstance(curse, str) is False:
-                                complete = buying(sender, curse_end)
-                                curse -= 1
-                                if curse == 0:
-                                    curse = 'SOLD OUT'
-                            if rm == 'амулет' and isinstance(pure, str) is False:
-                                complete = buying(sender, pure_end)
-                                pure -= 1
-                                if pure == 0:
-                                    pure = 'SOLD OUT'
-                            if rm == 'заказную статью' and isinstance(jour, str) is False:
-                                complete = buying(sender, jour_end)
-                                jour -= 1
-                                if jour == 0:
-                                    jour = 'SOLD OUT'
-                            if rm == 'звонок киллеру' and isinstance(kill, str) is False:
-                                complete = buying(sender, kill_end)
-                                kill -= 1
-                                if kill == 0:
-                                    kill = 'SOLD OUT'
-                            if rm == 'сыворотку правды' and isinstance(truth, str) is False:
-                                complete = buying(sender, truth_end)
-                                truth -= 1
-                                if truth == 0:
-                                    truth = 'SOLD OUT'
+            hour = int(datetime.datetime.today().strftime('%H'))
+            if hour == 16 or hour == 17 or hour == 22 or hour == 23:
+                if bal >= 30:
+                    for i in range(len(shop)):
+                        if shop[i - 1]['sender'] == sender:
+                            if shop[i - 1]['items'] == 0:
+                                rm = rm[7:]
+                                if rm == 'бутылку водки' and isinstance(vodka, str) is False:
+                                    complete = buying(sender, vodka_end)
+                                    vodka -= 1
+                                    if vodka == 0:
+                                        vodka = 'SOLD OUT'
+                                if rm == 'компромат' and isinstance(afer, str) is False:
+                                    complete = buying(sender, afer_end)
+                                    afer -= 1
+                                    if afer == 0:
+                                        afer = 'SOLD OUT'
+                                if rm == 'куклу вуду' and isinstance(voodoo, str) is False:
+                                    complete = buying(sender, voodoo_end)
+                                    voodoo -= 1
+                                    if voodoo == 0:
+                                        voodoo = 'SOLD OUT'
+                                if rm == 'бондаж' and isinstance(ropes, str) is False:
+                                    complete = buying(sender, ropes_end)
+                                    ropes -= 1
+                                    if ropes == 0:
+                                        ropes = 'SOLD OUT'
+                                if rm == 'прослушку' and isinstance(afer, str) is False:
+                                    complete = buying(sender, bug_end)
+                                    bug -= 1
+                                    if bug == 0:
+                                        bug = 'SOLD OUT'
+                                if rm == 'порчу' and isinstance(curse, str) is False:
+                                    complete = buying(sender, curse_end)
+                                    curse -= 1
+                                    if curse == 0:
+                                        curse = 'SOLD OUT'
+                                if rm == 'амулет' and isinstance(pure, str) is False:
+                                    complete = buying(sender, pure_end)
+                                    pure -= 1
+                                    if pure == 0:
+                                        pure = 'SOLD OUT'
+                                if rm == 'заказную статью' and isinstance(jour, str) is False:
+                                    complete = buying(sender, jour_end)
+                                    jour -= 1
+                                    if jour == 0:
+                                        jour = 'SOLD OUT'
+                                if rm == 'звонок киллеру' and isinstance(kill, str) is False:
+                                    complete = buying(sender, kill_end)
+                                    kill -= 1
+                                    if kill == 0:
+                                        kill = 'SOLD OUT'
+                                if rm == 'сыворотку правды' and isinstance(truth, str) is False:
+                                    complete = buying(sender, truth_end)
+                                    truth -= 1
+                                    if truth == 0:
+                                        truth = 'SOLD OUT'
 
-                            send_message(sender, complete)
-                            for admin in admins:
-                                message = f'Новая покупка предмета\n{sayer_name} vk.com/id{sender}\n\nКупили: {rm}'
-                                send_message(admin, message)
-                        else:
-                            send_message(sender, 'У тебя уже есть предмет на руках! Сначала используй его, потом поговорим.')
+                                send_message(sender, complete)
+                                for admin in admins:
+                                    message = f'Новая покупка предмета\n{sayer_name} vk.com/id{sender}\n\nКупили: {rm}'
+                                    send_message(admin, message)
+                            else:
+                                send_message(sender, 'У тебя уже есть предмет на руках! Сначала используй его, потом поговорим.')
+                else:
+                    send_message(sender, 'Ишь ты, чего хочешь! Иди денег сначала заработай!')
             else:
-                send_message(sender, 'Ишь ты, чего хочешь! Иди денег сначала заработай!')
-
+                send_message(sender, 'В данный момент магазин не работает. Попробуй позже.')
         elif rm[:13] == 'обнулить банк':
             rm = rm[14:]
             for i in range(len(admins)):
@@ -446,11 +520,10 @@ for event in longpoll.listen():
                         itogs += '\n'
                     itogs += '\n' + total_side
                     send_message(sender, itogs)
-        elif rm == 'тотализатор' or rm == 'количество смертей' or rm == 'стороны умерших' or rm[
-                                                                                             :6] == 'вангую' or rm == 'cветлые' or rm == 'cерые' or rm == 'tёмные' or rm == 'cветлые и тёмные' or rm == 'cерые и светлые' or rm == 'tёмные и серые' or rm == 'bсе стороны':
+        elif rm == 'тотализатор' or rm == 'количество смертей' or rm == 'стороны умерших' or rm[:6] == 'вангую' or rm == 'cветлые' or rm == 'cерые' or rm == 'tёмные' or rm == 'cветлые и тёмные' or rm == 'cерые и светлые' or rm == 'tёмные и серые' or rm == 'bсе стороны':
             hour = int(datetime.datetime.today().strftime('%H'))
             # minute = int(datetime.datetime.today().strftime('%M'))
-            if hour == 1 or hour == 16:
+            if hour == 22 or hour == 16:
                 if rm == 'тотализатор':
                     keyboard = VkKeyboard(inline=True)
                     keyboard.add_button('Количество смертей')
