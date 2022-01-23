@@ -116,12 +116,12 @@ for event in longpoll.listen():
             i = 0
             for i in range(len(admins)):
                 if sender == admins[i]:
-                    kill0 = 8
-                    heal0 = 7
-                    find0 = 7
-                    close0 = 5
-                    immune0 = 7
-                    vote0 = 8
+                    kill0 = 0
+                    heal0 = 0
+                    find0 = 0
+                    close0 = 2
+                    immune0 = 0
+                    vote0 = 1
 
                     kill = []
                     heal = []
@@ -140,7 +140,7 @@ for event in longpoll.listen():
                     break
                 elif sender != admins[i]:
                     i += 1
-        elif rm == "хочу контракт" and (hour == 21 and minute > 19 or hour == 17 and minute < 31):
+        elif rm == "хочу контракт" and (hour == 16 and minute > 1 or hour == 17 and minute < 31):
             keyboard = VkKeyboard(inline=True)
             keyboard.add_button('Иммунитет – забрать',
                                 color=VkKeyboardColor.PRIMARY)  # POSITIVE зелёный, NEGATIVE красный, PRIMARY синий
@@ -158,7 +158,7 @@ for event in longpoll.listen():
                 if sender == admins[i]:
                     itog = finally_end()
                     send_message(sender, itog)
-        elif rm[-9:] == "– забрать" and (hour == 16 and minute > 2 or hour == 17 and minute < 31):
+        elif rm[-9:] == "– забрать" and (hour == 16 and minute > 20 or hour == 17 and minute < 31):
             false = 0
             k = 0
             for k in range(len(ids)):
@@ -214,7 +214,7 @@ for event in longpoll.listen():
                         vote0 -= 1
                 else:
                     send_message(sender, "Что-что?")
-                if count == 43:
+                if count == 42:
                     au = 0
                     itog = finally_end()
                     for admin in admins:

@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 vodka_end = 'А паспорт-то у тебя есть? Ладно уж...\nИнструкция к применению: Откройте бутылку и подлейте водки в ' \
             'стакан сока выбранного вами игрока. Не забудьте сделать вид, что это не вы. '
 ropes_end = 'Спасибо за покупку!\nИнструкция к применению: Свяжите выбранного вами человека. При неправильной ' \
@@ -138,48 +141,66 @@ bug = 4
 curse = 2
 pure = 2
 afer = 3
-truth = 2
+truth = 1  # 2
 kill = 2
-voodoo = 1
+voodoo = 'SOLD OUT'  # 1
+
 
 req = []
-shop = [{'sender': 313354983,
-         'balance': 1000,
-         'is_true_sides': 0,
-         'is_true_deaths': 0,
-         'items': 0,
-         'side': '',
-         'stav': 0},
-        {'sender': 605574836,
-         'balance': 1000,
-         'is_true_sides': 0,
-         'is_true_deaths': 0,
-         'items': 0,
-         'side': '',
-         'stav': 0},
-        {'sender': 263861517,
-         'balance': 1000,
-         'is_true_sides': 0,
-         'is_true_deaths': 0,
-         'items': 0,
-         'side': '',
-         'stav': 0},
-        {'sender': 447434376,
-         'balance': 1000,
-         'is_true_sides': 0,
-         'is_true_deaths': 0,
-         'items': 0,
-         'side': '',
-         'stav': 0},
-        {'sender': 338010077,
-         'balance': 1000,
-         'is_true_sides': 0,
-         'is_true_deaths': 0,
-         'items': 0,
-         'side': '',
-         'stav': 0}
-        ]
 total = []
+shop = [
+    {'sender': 605574836, 'balance': 1000, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Cherry Sunset'},
+    {'sender': 313354983, 'balance': 1000, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'вед'},
+    {'sender': 263861517, 'balance': 1000, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'вед'},
+    {'sender': 447434376, 'balance': 1000, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'вед'},
+    {'sender': 338010077, 'balance': 1000, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'вед'},
+    {'sender': 196630580, 'balance': 3, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Анна Кузовлева'},
+    {'sender': 173594243, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Василиса Юрченко'},
+    {'sender': 525196190, 'balance': 12, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Алёна Романова'},
+    {'sender': 252868342, 'balance': 23, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 1, 'side': '', 'stav': 0, 'key': 'Joe Bond'},
+    {'sender': 41831686, 'balance': 12, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Елена Шишова'},
+    {'sender': 438664536, 'balance': 1, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Джулия Эванс'},
+    {'sender': 633301788, 'balance': 29, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Malifer Night'},
+    {'sender': 487623048, 'balance': 18, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Настя Инкапова'},
+    {'sender': 226943267, 'balance': 15, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 1, 'side': '', 'stav': 0, 'key': 'Alecardo Verona'},
+    {'sender': 646536662, 'balance': 19, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Ranpo Edogawa'},
+    {'sender': 611421224, 'balance': 10, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Alpharius Omegon'},
+    {'sender': 226493826, 'balance': 5, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Аделия Вольф'},
+    {'sender': 275840143, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Настя Дайкова'},
+    {'sender': 412984085, 'balance': 27, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Dar Carrington'},
+    {'sender': 199898497, 'balance': 11, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Ева Тошина'},
+    {'sender': 503081199, 'balance': 18, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Charlz Yustas'},
+    {'sender': 445636955, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Макс Громов'},
+    {'sender': 571595231, 'balance': 27, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Kaneki Ken'},
+    {'sender': 433147801, 'balance': 17, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Маргарита Тарченкова'},
+    {'sender': 683737186, 'balance': 29, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Rhona Markoff'},
+    {'sender': 84152108, 'balance': 12, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Dmitry Vasyasin'},
+    {'sender': 320414381, 'balance': 22, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'John Smith'},
+    {'sender': 655122901, 'balance': 4, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Dissembling Perfection'},
+    {'sender': 555333165, 'balance': 18, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Катерина Петрова'},
+    {'sender': 483346986, 'balance': 27, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Амедео Авогадро'},
+    {'sender': 261065512, 'balance': 12, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Кристина Кольцова'},
+    {'sender': 553592959, 'balance': 20, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Anthony Crowley'},
+    {'sender': 37201536, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Лена Соловьёва'},
+    {'sender': 587173386, 'balance': 17, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Маргарита Похабова'},
+    {'sender': 238425248, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Анастасия Немцова'},
+    {'sender': 627854074, 'balance': 32, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Китти О\'нил'},
+    {'sender': 383967542, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Eugeniya Agapova'},
+    {'sender': 467519986, 'balance': 25, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Джереми Пинкман'},
+    {'sender': 216035650, 'balance': 17, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Vincenzo Moretti'},
+    {'sender': 165104345, 'balance': 17, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Алексей Дубровский'},
+    {'sender': 666456203, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Jean-Pierre Polnareff'},
+    {'sender': 644756907, 'balance': 19, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Claire Ostin'},
+    {'sender': 555750466, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Tre Cool'},
+    {'sender': 186762099, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Sam Jeevas'},
+    {'sender': 545042400, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Александра Кретова'},
+    {'sender': 462470517, 'balance': 24, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Станислав Капибара'},
+    {'sender': 203349028, 'balance': 1, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Полина Яковлева'},
+    {'sender': 697199444, 'balance': 5, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Mary Kelly'},
+    {'sender': 174212212, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Аскар Рамазан'},
+    {'sender': 537589492, 'balance': 14, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Alterrium Astore'},
+    {'sender': 239877337, 'balance': 3, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Вольха Редная'}
+]
 group = 210073314
 totalize = 0
 totalize_max = 0
@@ -196,9 +217,19 @@ for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
         # admins = [605574836]
         admins = [313354983, 605574836, 263861517, 447434376, 338010077]
+        sender = event.user_id
+        # f = open('money.txt', 'r+', encoding="utf8")
+        # money = f.readlines()
+        # for el in money:
+        #     el = el.split(', ')
+        #     if int(el[0]) == sender:
+        #         shop.append(
+        #             dict(sender=int(el[0]), balance=int(el[2]), is_true_sides=int(el[3]), is_true_deaths=int(el[4]),
+        #                  items=int(el[5]), side=int(el[6]), stav=int(el[7])))
+        #         print(shop)
+        #         break
         received_message = event.text
         rm = received_message.lower()
-        sender = event.user_id
         sayer_name = get_name(sender)
         try:
             player_balance = get_balance(sender)
@@ -275,7 +306,7 @@ for event in longpoll.listen():
                                 ending = find_ending(rm)
                                 side = shop[i - 1]['side']
                                 mes = f'Новая ставка на победу\n{sayer_name} vk.com/id{sender}\n\nРазмер ' \
-                                              f'ставки: {rm} деллик{ending}\nСторона: {side}'
+                                      f'ставки: {rm} деллик{ending}\nСторона: {side}'
                                 send_message(admin, mes)
                         else:
                             send_message(sender, 'Больше ставить на победу стороны нельзя! Надо было думать раньше!')
@@ -292,7 +323,8 @@ for event in longpoll.listen():
                 player_balance = 'Твой ' + player_balance
                 send_message(sender, player_balance)
             else:
-                shop.append(dict(sender=sender, balance=0, is_true_sides=0, is_true_deaths=0, items=0, side='', stav=0))  # creating player's slot
+                shop.append(dict(sender=sender, balance=0, is_true_sides=0, is_true_deaths=0, items=0, side='',
+                                 stav=0))  # creating player's slot
                 send_message(sender, 'Поздравляю, у тебя появился кошелёк. Держи ухо востро: скоро там появятся '
                                      'деньги! Если они, конечно, у тебя были...')
                 for admin in admins:
@@ -412,6 +444,7 @@ for event in longpoll.listen():
             send_button(sender, buying1)
         elif rm[:6] == 'kупить':
             hour = int(datetime.datetime.today().strftime('%H'))
+            print(hour)
             if hour == 16 or hour == 17 or hour == 22 or hour == 23:
                 if bal >= 30:
                     for i in range(len(shop)):
@@ -474,7 +507,8 @@ for event in longpoll.listen():
                                     message = f'Новая покупка предмета\n{sayer_name} vk.com/id{sender}\n\nКупили: {rm}'
                                     send_message(admin, message)
                             else:
-                                send_message(sender, 'У тебя уже есть предмет на руках! Сначала используй его, потом поговорим.')
+                                send_message(sender,
+                                             'У тебя уже есть предмет на руках! Сначала используй его, потом поговорим.')
                 else:
                     send_message(sender, 'Ишь ты, чего хочешь! Иди денег сначала заработай!')
             else:
@@ -523,7 +557,8 @@ for event in longpoll.listen():
                         itogs += '\n'
                     itogs += '\n' + total_side
                     send_message(sender, itogs)
-        elif rm == 'тотализатор' or rm == 'количество смертей' or rm == 'стороны умерших' or rm[:6] == 'вангую' or rm == 'cветлые' or rm == 'cерые' or rm == 'tёмные' or rm == 'cветлые и тёмные' or rm == 'cерые и светлые' or rm == 'tёмные и серые' or rm == 'bсе стороны':
+        elif rm == 'тотализатор' or rm == 'количество смертей' or rm == 'стороны умерших' or rm[
+                                                                                             :6] == 'вангую' or rm == 'cветлые' or rm == 'cерые' or rm == 'tёмные' or rm == 'cветлые и тёмные' or rm == 'cерые и светлые' or rm == 'tёмные и серые' or rm == 'bсе стороны':
             hour = int(datetime.datetime.today().strftime('%H'))
             # minute = int(datetime.datetime.today().strftime('%M'))
             if hour == 22 or hour == 16:
@@ -664,9 +699,10 @@ for event in longpoll.listen():
                             a = 4
                         else:
                             a = 6
-                        send_message(sender, '🔪 [Шаг {}] Уточни используемый контракт/предмет.\nОбязательно! Начни со слова '
-                                             '\"Контракт\"/\"Предмет\". Пример: \"Контракт иммунитет\", \"Предмет прослушка\" и т.п.'.format(
-                            a))
+                        send_message(sender,
+                                     '🔪 [Шаг {}] Уточни используемый контракт/предмет.\nОбязательно! Начни со слова '
+                                     '\"Контракт\"/\"Предмет\". Пример: \"Контракт иммунитет\", \"Предмет прослушка\" и т.п.'.format(
+                                         a))
                     elif rm[:4] == 'роль' or rm[:8] == 'контракт' or rm[:7] == 'предмет':
                         req[i - 1]['item'] = rm
                         if req[i - 1]['type'] == 'Активное действие':
@@ -727,3 +763,22 @@ for event in longpoll.listen():
                                     sayer_name, sender, group, sender, host, activity, item1, item2, victim))
                         req.pop(i - 1)
                     break
+        # f.close()
+        # f = open('money.txt', 'w', encoding="utf8")
+        # f.close()
+        # f = open('money.txt', 'r+', encoding="utf8")
+        # money = f.readlines()
+        # sequence = []
+        # for el in money:
+        #     el = el.split(', ')
+        #     if int(el[0]) == sender:
+        #         el[2] = str(shop[0]['balance'])
+        #         el[3] = str(shop[0]['is_true_sides'])
+        #         el[4] = str(shop[0]['is_true_deaths'])
+        #         el[5] = str(shop[0]['items'])
+        #         el[6] = str(shop[0]['side'])
+        #         el[7] = str(shop[0]['stav'])
+        #     elem = ', '.join(el)
+        #     sequence.append(elem)
+        # f.writelines(sequence)
+        # f.close()
