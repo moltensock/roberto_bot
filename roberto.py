@@ -135,7 +135,7 @@ def buying(sender, item_end):
 
 
 vodka = 4
-ropes = 4
+ropes = 2 # 4
 jour = 4
 bug = 4
 curse = 2
@@ -194,7 +194,7 @@ shop = [
     {'sender': 555750466, 'balance': 17, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Tre Cool'},
     {'sender': 186762099, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Sam Jeevas'},
     {'sender': 545042400, 'balance': 11, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Александра Кретова'},
-    {'sender': 462470517, 'balance': 35, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Станислав Капибара'},
+    {'sender': 462470517, 'balance': 5, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Станислав Капибара'},
     {'sender': 203349028, 'balance': 1, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Полина Яковлева'},
     {'sender': 697199444, 'balance': 5, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Mary Kelly'},
     {'sender': 174212212, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Аскар Рамазан'},
