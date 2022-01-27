@@ -134,8 +134,8 @@ def buying(sender, item_end):
     return complete
 
 
-vodka = 4
-ropes = 2 # 4
+vodka = 3 # 4
+ropes = 1 # 4
 jour = 4
 bug = 4
 curse = 2
@@ -157,10 +157,10 @@ shop = [
     {'sender': 196630580, 'balance': 3, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Анна Кузовлева'},
     {'sender': 173594243, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Василиса Юрченко'},
     {'sender': 525196190, 'balance': 12, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Алёна Романова'},
-    {'sender': 252868342, 'balance': 36, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Joe Bond'},
+    {'sender': 252868342, 'balance': 6, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Joe Bond'},
     {'sender': 41831686, 'balance': 12, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Елена Шишова'},
-    {'sender': 438664536, 'balance': 1, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Джулия Эванс'},
-    {'sender': 633301788, 'balance': 29, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Malifer Night'},
+    {'sender': 438664536, 'balance': 16, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Джулия Эванс'},
+    {'sender': 633301788, 'balance': 0, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Malifer Night'},
     {'sender': 487623048, 'balance': 18, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Настя Инкапова'},
     {'sender': 226943267, 'balance': 28, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 1, 'side': '', 'stav': 0, 'key': 'Alecardo Verona'},
     {'sender': 646536662, 'balance': 19, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Ranpo Edogawa'},
