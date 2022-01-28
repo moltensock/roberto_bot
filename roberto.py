@@ -164,10 +164,10 @@ shop = [
     {'sender': 487623048, 'balance': 18, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Настя Инкапова'},
     {'sender': 226943267, 'balance': 28, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 1, 'side': '', 'stav': 0, 'key': 'Alecardo Verona'},
     {'sender': 646536662, 'balance': 19, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Ranpo Edogawa'},
-    {'sender': 611421224, 'balance': 38, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Alpharius Omegon'},
+    {'sender': 611421224, 'balance': 25, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Alpharius Omegon'},
     {'sender': 226493826, 'balance': 20, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Аделия Вольф'},
     {'sender': 275840143, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Настя Дайкова'},
-    {'sender': 412984085, 'balance': 32, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Dar Carrington'},
+    {'sender': 412984085, 'balance': 21, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Dar Carrington'},
     {'sender': 199898497, 'balance': 15, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Ева Тошина'},
     {'sender': 503081199, 'balance': 18, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Charlz Yustas'},
     {'sender': 445636955, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Макс Громов'},
@@ -176,12 +176,12 @@ shop = [
     {'sender': 683737186, 'balance': 1, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Rhona Markoff'},
     {'sender': 84152108, 'balance': 14, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Dmitry Vasyasin'},
     {'sender': 320414381, 'balance': 21, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'John Smith'},
-    {'sender': 655122901, 'balance': 19, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Dissembling Perfection'},
+    {'sender': 655122901, 'balance': 21, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Dissembling Perfection'},
     {'sender': 555333165, 'balance': 18, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Катерина Петрова'},
     {'sender': 483346986, 'balance': 27, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Амедео Авогадро'},
     {'sender': 261065512, 'balance': 12, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Кристина Кольцова'},
     {'sender': 553592959, 'balance': 4, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 1, 'side': '', 'stav': 0, 'key': 'Anthony Crowley'},
-    {'sender': 37201536, 'balance': 32, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Лена Соловьёва'},
+    {'sender': 37201536, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Лена Соловьёва'},
     {'sender': 587173386, 'balance': 17, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Маргарита Похабова'},
     {'sender': 238425248, 'balance': 17, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Анастасия Немцова'},
     {'sender': 627854074, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Китти О\'нил'},
@@ -359,7 +359,6 @@ for event in longpoll.listen():
                         except IndexError:
                             send_message(sender, 'Ой... Будь осторожнее!')
         elif rm == 'магазин' or rm == 'вернуться к списку предметов':
-            hour = int(datetime.datetime.today().strftime('%H'))
             keyboard = VkKeyboard(inline=True)
             keyboard.add_button('Компромат')
             keyboard.add_button('Кукла Вуду')
@@ -374,7 +373,6 @@ for event in longpoll.listen():
             player_balance = 'Твой ' + player_balance
             message = f'Приветствую в своей лавке, дружище! Покажи-ка свой кошелёк... Хм... {player_balance} Не густо. Ладно, смотри, что у меня есть:\n\nКомпромат (шт.): {afer}\nКукла Вуду (шт.): {voodoo}\nБондаж (шт.): {ropes}\nПрослушка (шт.): {bug}\nПорча (шт.): {curse}\nАмулет (шт.): {pure}\n\nЕсли это тебя не устроит, за твоей спиной есть ещё прилавок.'
             send_button(sender, message)
-            send_message(sender, hour)
         elif rm == 'больше предметов':
             keyboard = VkKeyboard(inline=True)
             keyboard.add_button('Заказная статья')
@@ -447,7 +445,7 @@ for event in longpoll.listen():
         elif rm[:6] == 'kупить':
             hour = int(datetime.datetime.today().strftime('%H'))
             print(hour)
-            if hour == 16 or hour == 17 or hour == 22 or hour == 23:
+            if hour == 13 or hour == 14 or hour == 19 or hour == 20:
                 if bal >= 30:
                     for i in range(len(shop)):
                         if shop[i - 1]['sender'] == sender:
