@@ -134,11 +134,11 @@ def buying(sender, item_end):
     return complete
 
 
-vodka = 3 # 4
-ropes = 1 # 4
+vodka = 2 # 4
+ropes = 'SOLD OUT' # 4
 jour = 4
 bug = 4
-curse = 2
+curse = 'SOLD OUT' # 2
 pure = 'SOLD OUT' # 2
 afer = 3
 truth = 'SOLD OUT'  # 2
@@ -164,10 +164,10 @@ shop = [
     {'sender': 487623048, 'balance': 18, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Настя Инкапова'},
     {'sender': 226943267, 'balance': 28, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 1, 'side': '', 'stav': 0, 'key': 'Alecardo Verona'},
     {'sender': 646536662, 'balance': 19, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Ranpo Edogawa'},
-    {'sender': 611421224, 'balance': 25, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Alpharius Omegon'},
+    {'sender': 611421224, 'balance': 8, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Alpharius Omegon'},
     {'sender': 226493826, 'balance': 20, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Аделия Вольф'},
     {'sender': 275840143, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Настя Дайкова'},
-    {'sender': 412984085, 'balance': 21, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Dar Carrington'},
+    {'sender': 412984085, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Dar Carrington'},
     {'sender': 199898497, 'balance': 15, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Ева Тошина'},
     {'sender': 503081199, 'balance': 18, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Charlz Yustas'},
     {'sender': 445636955, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Макс Громов'},
@@ -187,7 +187,7 @@ shop = [
     {'sender': 627854074, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Китти О\'нил'},
     {'sender': 383967542, 'balance': 17, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Eugeniya Agapova'},
     {'sender': 467519986, 'balance': 25, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Джереми Пинкман'},
-    {'sender': 216035650, 'balance': 15, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Vincenzo Moretti'},
+    {'sender': 216035650, 'balance': 0, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Vincenzo Moretti'},
     {'sender': 165104345, 'balance': 9, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Алексей Дубровский'},
     {'sender': 666456203, 'balance': 2, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Jean-Pierre Polnareff'},
     {'sender': 644756907, 'balance': 5, 'is_true_sides': 0, 'is_true_deaths': 0, 'items': 0, 'side': '', 'stav': 0, 'key': 'Claire Ostin'},
