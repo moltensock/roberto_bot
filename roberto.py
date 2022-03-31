@@ -326,10 +326,12 @@ for event in longpoll.listen():
         elif rm == 'баланс':
             db_object.execute(f"SELECT sender FROM shop_table WHERE sender = {sender}")
             result = db_object.fetchone()
+            send_message(sender, 'этап 1')
 
             if not result:
                 db_object.execute("INSERT INTO shop_table(sender, key) VALUES ({}, \'{}\')".format(sender, sayer_name))
                 db_connection.commit()
+                send_message(sender, 'этап 2')
             # if player_balance[:6] == 'баланс':
             #     player_balance = 'Твой ' + player_balance
             #     send_message(sender, player_balance)
