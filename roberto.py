@@ -80,6 +80,7 @@ from vk_api.utils import get_random_id
 from vk_api import VkUpload
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 import datetime
+import psycopg2
 
 
 def send_message(sender, message):
@@ -207,7 +208,11 @@ totalize_max = 0
 totalize_side = 0
 total_side = 'ТОТАЛИЗАТОР НА СТОРОНЫ:\n'
 
-token = "8d5b1a0549cd3d9528bfeccce5db1d8672f8c256a46822defab1aa2d83e4e6a177505a23a58283710742c"
+db_uri = 'postgres://iknezudszhdofh:7a7dea3edf41419f38e2803cc696238f35c99ae4a93357adc3a32194b9d3a8c8@ec2-176-34-211-0.eu-west-1.compute.amazonaws.com:5432/d61qpgao4fa4d0'
+db_connection = psycopg2.connect(db_uri, sslmode="require")
+db_object = db_connection.cursor()
+
+token = "1683bfb0559e63509e8742f940e839130b8c16d964870c32c6440c0e1f312365e0c454559f99196c69a10"
 authorize = vk_api.VkApi(token=token)
 longpoll = VkLongPoll(authorize)
 getting_api = authorize.get_api()
@@ -215,8 +220,8 @@ upload = VkUpload(authorize)
 
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-        # admins = [605574836]
-        admins = [313354983, 605574836, 263861517, 447434376, 338010077]
+        admins = [605574836]
+        # admins = [313354983, 605574836, 263861517, 447434376, 338010077]
         sender = event.user_id
         # f = open('money.txt', 'r+', encoding="utf8")
         # money = f.readlines()
@@ -319,17 +324,23 @@ for event in longpoll.listen():
                             shop[i - 1]['side'] = 'рип'
                     send_message(sender, 'Ставки на победу стороны больше не принимаются.')
         elif rm == 'баланс':
-            if player_balance[:6] == 'баланс':
-                player_balance = 'Твой ' + player_balance
-                send_message(sender, player_balance)
-            else:
-                shop.append(dict(sender=sender, balance=0, is_true_sides=0, is_true_deaths=0, items=0, side='',
-                                 stav=0))  # creating player's slot
-                send_message(sender, 'Поздравляю, у тебя появился кошелёк. Держи ухо востро: скоро там появятся '
-                                     'деньги! Если они, конечно, у тебя были...')
-                for admin in admins:
-                    mes = f'Игрок {sayer_name} (id{sender}) создал кошелёк и хочет деняк'
-                    send_message(admin, mes)
+            db_object.execute(f"SELECT sender FROM shop_table WHERE sender = {sender}")
+            result = db_object.fetchone()
+
+            if not result:
+                db_object.execute("INSERT INTO shop_table(sender, key) VALUES ({}, \'{}\')".format(sender, sayer_name))
+                db_connection.commit()
+            # if player_balance[:6] == 'баланс':
+            #     player_balance = 'Твой ' + player_balance
+            #     send_message(sender, player_balance)
+            # else:
+            #     shop.append(dict(sender=sender, balance=0, is_true_sides=0, is_true_deaths=0, items=0, side='',
+            #                      stav=0))  # creating player's slot
+            #     send_message(sender, 'Поздравляю, у тебя появился кошелёк. Держи ухо востро: скоро там появятся '
+            #                          'деньги! Если они, конечно, у тебя были...')
+            #     for admin in admins:
+            #         mes = f'Игрок {sayer_name} (id{sender}) создал кошелёк и хочет деняк'
+            #         send_message(admin, mes)
         elif rm[:2] == 'id':
             for j in range(len(admins)):
                 if sender == admins[j]:
