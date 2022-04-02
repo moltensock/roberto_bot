@@ -128,29 +128,28 @@ def get_balance(sender_):
     bal = get_bal(sender_)
     player_balance = f'баланс: {bal} деллик{find_ending(bal)}.'
     return player_balance
-    # sender_ = int(sender_)
-    # player_balance = f'баланс: {get_bal(sender_)} деллик{find_ending(get_bal(sender_))}.'
-    # return player_balance
 
 
 def buying(sender, item_end):
-    shop[i - 1]['balance'] -= 30
-    shop[i - 1]['items'] = 1
+    db_object.execute("UPDATE shop_table SET balance = balance - 30 WHERE sender = {}".format(sender))
+    db_connection.commit()
+    db_object.execute("UPDATE shop_table SET items = 1 WHERE sender = {}".format(sender))
+    db_connection.commit()
     player_balance = get_balance(sender)
     complete = item_end + f'\n\nТекущий {player_balance}'
     return complete
 
 
-vodka = 2  # 4
-ropes = 'SOLD OUT'  # 4
+vodka = 4
+ropes = 4
 jour = 4
 bug = 4
-curse = 'SOLD OUT'  # 2
-pure = 'SOLD OUT'  # 2
+curse = 2
+pure = 2
 afer = 3
-truth = 'SOLD OUT'  # 2
-kill = 'SOLD OUT'  # 2
-voodoo = 'SOLD OUT'  # 1
+truth = 2
+kill = 2
+voodoo = 1
 
 req = []
 total = []
@@ -264,7 +263,7 @@ totalize_max = 0
 totalize_side = 0
 total_side = 'ТОТАЛИЗАТОР НА СТОРОНЫ:\n'
 
-db_uri = 'postgres://iknezudszhdofh:7a7dea3edf41419f38e2803cc696238f35c99ae4a93357adc3a32194b9d3a8c8@ec2-176-34-211-0.eu-west-1.compute.amazonaws.com:5432/d61qpgao4fa4d0'
+db_uri = 'postgres://aubkbpitosgnii:2100a90c07ce67264813bd42c5ef090455b4c91b9c965eb7ded4568f18122156@ec2-34-242-84-130.eu-west-1.compute.amazonaws.com:5432/d6oc4c6urml2ig'
 db_connection = psycopg2.connect(db_uri, sslmode="require")
 db_object = db_connection.cursor()
 
@@ -365,10 +364,10 @@ for event in longpoll.listen():
         elif rm == 'стоп ставки':
             for j in range(len(admins)):
                 if sender == admins[j]:
-                    for i in range(len(shop)):
-                        if shop[i - 1]['stav'] != 1:
-                            shop[i - 1]['stav'] = 1
-                            shop[i - 1]['side'] = 'рип'
+                    db_object.execute("UPDATE shop_table SET side = 'рип' WHERE stav = 0")
+                    db_connection.commit()
+                    db_object.execute("UPDATE shop_table SET stav = 1 WHERE stav = 0")
+                    db_connection.commit()
                     send_message(sender, 'Ставки на победу стороны больше не принимаются.')
         elif rm == 'баланс':
             db_object.execute(f"SELECT sender FROM shop_table WHERE sender = {sender}")
@@ -391,30 +390,36 @@ for event in longpoll.listen():
                 if sender == admins[j]:
                     rm = rm[2:]
                     k = rm.split(' ')
+                    player = int(k[0])
                     if k[1] == 'предмет':
-                        for i in range(len(shop)):
-                            if shop[i - 1]['sender'] == int(k[0]):
-                                if shop[i - 1]['items'] == 1:
-                                    shop[i - 1]['items'] = 0
-                                    send_message(sender, 'Игрок {} использовал свой предмет'.format(k[0]))
-                                else:
-                                    send_message(sender, 'У этого игрока нет предмета')
+                        db_object.execute(f"SELECT items FROM shop_table WHERE sender = {player}")
+                        is_item = db_object.fetchone()[0]
+                        if is_item == 1:
+                            db_object.execute("UPDATE shop_table SET items = 0 WHERE sender = {}".format(sender))
+                            db_connection.commit()
+                            db_object.execute(f"SELECT key FROM shop_table WHERE sender = {player}")
+                            name = db_object.fetchone()[0]
+                            send_message(sender, 'Игрок {} использовал свой предмет'.format(name))
+                        else:
+                            send_message(sender, 'У этого игрока нет предмета')
                     else:
                         try:
                             ending1 = find_ending(k[1])
-                            for i in range(len(shop)):
-                                if shop[i - 1]['sender'] == int(k[0]):
-                                    shop[i - 1]['balance'] += int(k[1])
-                                    player_balance = 'Текущий ' + get_balance(int(k[0]))
-                                    message = f'Твой счёт пополнен на {k[1]} деллик{ending1}. {player_balance}'
-                                    adm = f'Баланс игрока vk.com/id{k[0]} пополнен на {k[1]} деллик{ending1}'
-                                    send_message(int(k[0]), message)
-                                    send_message(sender, adm)
-                                    send_message(313354983, adm)
-                                    send_message(605574836, adm)
+                            add = int(k[1])
+                            db_object.execute(f"UPDATE shop_table SET balance = balance + {add} WHERE sender = {player}")
+                            db_connection.commit()
+                            player_balance = 'Текущий ' + get_balance(player)
+                            message = f'Твой счёт пополнен на {add} деллик{ending1}. {player_balance}'
+                            adm = f'Баланс игрока vk.com/id{player} пополнен на {add} деллик{ending1}'
+                            send_message(int(k[0]), message)
+                            send_message(sender, adm)
+                            if sender != 605574836:
+                                send_message(605574836, adm)
                         except IndexError:
-                            send_message(sender, 'Ой... Будь осторожнее!')
+                            continue
         elif rm == 'магазин' or rm == 'вернуться к списку предметов':
+            bal = get_bal(sender)
+            player_balance = get_balance(sender)
             keyboard = VkKeyboard(inline=True)
             keyboard.add_button('Компромат')
             keyboard.add_button('Кукла Вуду')
@@ -445,6 +450,8 @@ for event in longpoll.listen():
         elif rm == 'компромат' or rm == 'кукла вуду' or rm == 'бондаж' or rm == 'прослушка' or rm == 'порча' or rm == 'амулет' or rm == 'заказная статья' or rm == 'бутылка водки' or rm == 'сыворотка правды' or rm == 'звонок киллеру':
             keyboard = VkKeyboard(inline=True)
             keyboard.add_button('Вернуться к списку предметов')
+            bal = get_bal(sender)
+            player_balance = get_balance(sender)
 
             if rm == 'бутылка водки' and isinstance(vodka, str) is False:
                 if bal >= 30:
@@ -501,74 +508,77 @@ for event in longpoll.listen():
         elif rm[:6] == 'kупить':
             hour = int(datetime.datetime.today().strftime('%H'))
             print(hour)
-            if hour == 13 or hour == 14 or hour == 19 or hour == 20:
+            if hour == 10: # hour == 13 or hour == 14 or hour == 19 or hour == 20:
+                bal = get_bal(sender)
+                player_balance = get_balance(sender)
                 if bal >= 30:
-                    for i in range(len(shop)):
-                        if shop[i - 1]['sender'] == sender:
-                            if shop[i - 1]['items'] == 0:
-                                rm = rm[7:]
-                                if rm == 'бутылку водки' and isinstance(vodka, str) is False:
-                                    complete = buying(sender, vodka_end)
-                                    vodka -= 1
-                                    if vodka == 0:
-                                        vodka = 'SOLD OUT'
-                                if rm == 'компромат' and isinstance(afer, str) is False:
-                                    complete = buying(sender, afer_end)
-                                    afer -= 1
-                                    if afer == 0:
-                                        afer = 'SOLD OUT'
-                                if rm == 'куклу вуду' and isinstance(voodoo, str) is False:
-                                    complete = buying(sender, voodoo_end)
-                                    voodoo -= 1
-                                    if voodoo == 0:
-                                        voodoo = 'SOLD OUT'
-                                if rm == 'бондаж' and isinstance(ropes, str) is False:
-                                    complete = buying(sender, ropes_end)
-                                    ropes -= 1
-                                    if ropes == 0:
-                                        ropes = 'SOLD OUT'
-                                if rm == 'прослушку' and isinstance(afer, str) is False:
-                                    complete = buying(sender, bug_end)
-                                    bug -= 1
-                                    if bug == 0:
-                                        bug = 'SOLD OUT'
-                                if rm == 'порчу' and isinstance(curse, str) is False:
-                                    complete = buying(sender, curse_end)
-                                    curse -= 1
-                                    if curse == 0:
-                                        curse = 'SOLD OUT'
-                                if rm == 'амулет' and isinstance(pure, str) is False:
-                                    complete = buying(sender, pure_end)
-                                    pure -= 1
-                                    if pure == 0:
-                                        pure = 'SOLD OUT'
-                                if rm == 'заказную статью' and isinstance(jour, str) is False:
-                                    complete = buying(sender, jour_end)
-                                    jour -= 1
-                                    if jour == 0:
-                                        jour = 'SOLD OUT'
-                                if rm == 'звонок киллеру' and isinstance(kill, str) is False:
-                                    complete = buying(sender, kill_end)
-                                    kill -= 1
-                                    if kill == 0:
-                                        kill = 'SOLD OUT'
-                                if rm == 'сыворотку правды' and isinstance(truth, str) is False:
-                                    complete = buying(sender, truth_end)
-                                    truth -= 1
-                                    if truth == 0:
-                                        truth = 'SOLD OUT'
+                    db_object.execute(f"SELECT items FROM shop_table WHERE sender = {sender}")
+                    items = db_object.fetchone()[0]
+                    if items == 0:
+                        rm = rm[7:]
+                        if rm == 'бутылку водки' and isinstance(vodka, str) is False:
+                            complete = buying(sender, vodka_end)
+                            vodka -= 1
+                            if vodka == 0:
+                                vodka = 'SOLD OUT'
+                        if rm == 'компромат' and isinstance(afer, str) is False:
+                            complete = buying(sender, afer_end)
+                            afer -= 1
+                            if afer == 0:
+                                afer = 'SOLD OUT'
+                        if rm == 'куклу вуду' and isinstance(voodoo, str) is False:
+                            complete = buying(sender, voodoo_end)
+                            voodoo -= 1
+                            if voodoo == 0:
+                                voodoo = 'SOLD OUT'
+                        if rm == 'бондаж' and isinstance(ropes, str) is False:
+                            complete = buying(sender, ropes_end)
+                            ropes -= 1
+                            if ropes == 0:
+                                ropes = 'SOLD OUT'
+                        if rm == 'прослушку' and isinstance(afer, str) is False:
+                            complete = buying(sender, bug_end)
+                            bug -= 1
+                            if bug == 0:
+                                bug = 'SOLD OUT'
+                        if rm == 'порчу' and isinstance(curse, str) is False:
+                            complete = buying(sender, curse_end)
+                            curse -= 1
+                            if curse == 0:
+                                curse = 'SOLD OUT'
+                        if rm == 'амулет' and isinstance(pure, str) is False:
+                            complete = buying(sender, pure_end)
+                            pure -= 1
+                            if pure == 0:
+                                pure = 'SOLD OUT'
+                        if rm == 'заказную статью' and isinstance(jour, str) is False:
+                            complete = buying(sender, jour_end)
+                            jour -= 1
+                            if jour == 0:
+                                jour = 'SOLD OUT'
+                        if rm == 'звонок киллеру' and isinstance(kill, str) is False:
+                            complete = buying(sender, kill_end)
+                            kill -= 1
+                            if kill == 0:
+                                kill = 'SOLD OUT'
+                        if rm == 'сыворотку правды' and isinstance(truth, str) is False:
+                            complete = buying(sender, truth_end)
+                            truth -= 1
+                            if truth == 0:
+                                truth = 'SOLD OUT'
 
-                                send_message(sender, complete)
-                                for admin in admins:
-                                    message = f'Новая покупка предмета\n{sayer_name} vk.com/id{sender}\n\nКупили: {rm}'
-                                    send_message(admin, message)
-                            else:
-                                send_message(sender,
-                                             'У тебя уже есть предмет на руках! Сначала используй его, потом поговорим.')
+                        send_message(sender, complete)
+                        for admin in admins:
+                            message = f'Новая покупка предмета\n{sayer_name} vk.com/id{sender}\n\nКупили: {rm}'
+                            send_message(admin, message)
+                    else:
+                        send_message(sender,
+                                     'У тебя уже есть предмет на руках! Сначала используй его, потом поговорим.')
                 else:
                     send_message(sender, 'Ишь ты, чего хочешь! Иди денег сначала заработай!')
             else:
                 send_message(sender, 'В данный момент магазин не работает. Попробуй позже.')
+
         elif rm[:13] == 'обнулить банк':
             rm = rm[14:]
             for i in range(len(admins)):
@@ -577,14 +587,14 @@ for event in longpoll.listen():
                         totalize = 0
                         total = []
                         totalize_max = 0
-                        for j in range(len(shop)):
-                            shop[j - 1]['is_true_deaths'] = 0
+                        db_object.execute("UPDATE shop_table SET is_true_deaths = 0")
+                        db_connection.commit()
                         send_message(sender, 'Банк тотализатора смертей обнулён. Мы готовы к новой фазе!')
                     elif rm == 'сторон':
                         totalize_side = 0
                         total_side = 'ТОТАЛИЗАТОР НА СТОРОНЫ:\n'
-                        for j in range(len(shop)):
-                            shop[j - 1]['is_true_sides'] = 0
+                        db_object.execute("UPDATE shop_table SET is_true_sides = 0")
+                        db_connection.commit()
                         send_message(sender, 'Банк тотализатора сторон обнулён. Мы готовы к новой фазе!')
         elif rm[:14] == 'обнулить людей':
             rm = rm[15:]
@@ -593,13 +603,13 @@ for event in longpoll.listen():
                     if rm == 'смерти':
                         total = []
                         totalize_max = 0
-                        for i in range(len(shop)):
-                            shop[i - 1]['is_true_deaths'] = 0
+                        db_object.execute("UPDATE shop_table SET is_true_deaths = 0")
+                        db_connection.commit()
                         send_message(sender, 'Банк тотализатора смертей сохранён. Мы готовы к новой фазе!')
                     elif rm == 'стороны':
                         total_side = 'ТОТАЛИЗАТОР НА СТОРОНЫ:\n'
-                        for i in range(len(shop)):
-                            shop[i - 1]['is_true_sides'] = 0
+                        db_object.execute("UPDATE shop_table SET is_true_sides = 0")
+                        db_connection.commit()
                         send_message(sender, 'Банк тотализатора сторон сохранён. Мы готовы к новой фазе!')
         elif rm == 'ставки тотализатора':
             for k in range(len(admins)):
@@ -617,7 +627,7 @@ for event in longpoll.listen():
                                                                                              :6] == 'вангую' or rm == 'cветлые' or rm == 'cерые' or rm == 'tёмные' or rm == 'cветлые и тёмные' or rm == 'cерые и светлые' or rm == 'tёмные и серые' or rm == 'bсе стороны':
             hour = int(datetime.datetime.today().strftime('%H'))
             # minute = int(datetime.datetime.today().strftime('%M'))
-            if hour == 22 or hour == 16:
+            if hour == 10: # hour == 22 or hour == 16:
                 if rm == 'тотализатор':
                     keyboard = VkKeyboard(inline=True)
                     keyboard.add_button('Количество смертей')
@@ -640,26 +650,31 @@ for event in longpoll.listen():
                     keyboard.add_button('Bсе стороны', color=VkKeyboardColor.PRIMARY)
                     send_button(sender, 'Выбери, кто сегодня потеряет игроков (стоимость ставки: 5 делликов):')
                 elif rm == 'cветлые' or rm == 'cерые' or rm == 'tёмные' or rm == 'cветлые и тёмные' or rm == 'cерые и светлые' or rm == 'tёмные и серые' or rm == 'bсе стороны':
+                    bal = get_bal(sender)
+                    player_balance = get_balance(sender)
                     if bal - 5 >= 0:
-                        for i in range(len(shop)):
-                            if shop[i - 1]['sender'] == sender:
-                                if shop[i - 1]['is_true_sides'] == 0:
-                                    shop[i - 1]['balance'] -= 5
-                                    player_balance = get_balance(sender)
-                                    totalize_side += 5
-                                    total_side += f'{sayer_name} — {rm.capitalize()}\n'
-                                    send_message(sender, f'Твоя ставка: {rm.capitalize()} потеряют игрока. '
-                                                         f'\nТекущий {player_balance}.\nСпасибо за участие '
-                                                         f'и да пребудет с тобой удача! ')
-                                    shop[i - 1]['is_true_sides'] = 1
-                                    ending2 = find_ending(totalize_side)
-                                    for admin in admins:
-                                        mes = f'Новая ставка в тотализатор (стороны)\n{sayer_name} vk.com/id{sender}\n\nСторона: {rm.capitalize()}\nТекущий банк: {totalize_side} деллик{ending2} '
-                                        send_message(admin, mes)
-                                else:
-                                    send_message(sender, 'Твоя ставка уже учтена! Приходи в следующий раз.')
+                        db_object.execute(f"SELECT is_true_sides FROM shop_table WHERE sender = {sender}")
+                        is_sides = db_object.fetchone()[0]
+                        if is_sides == 0:
+                            db_object.execute("UPDATE shop_table SET balance = balance - 5 WHERE sender = {}".format(sender))
+                            db_connection.commit()
+                            db_object.execute("UPDATE shop_table SET is_true_sides = 1 WHERE sender = {}".format(sender))
+                            db_connection.commit()
+                            player_balance = get_balance(sender)
+                            totalize_side += 5
+                            total_side += f'{sayer_name} — {rm.capitalize()}\n'
+                            send_message(sender, f'Твоя ставка: {rm.capitalize()} потеряют игрока. '
+                                                 f'\nТекущий {player_balance}.\nСпасибо за участие '
+                                                 f'и да пребудет с тобой удача! ')
+                            ending2 = find_ending(totalize_side)
+                            for admin in admins:
+                                mes = f'Новая ставка в тотализатор (стороны)\n{sayer_name} vk.com/id{sender}\n\nСторона: {rm.capitalize()}\nТекущий банк: {totalize_side} деллик{ending2} '
+                                send_message(admin, mes)
+                        else:
+                            send_message(sender, 'Твоя ставка уже учтена! Приходи в следующий раз.')
                     else:
                         send_message(sender, 'На твоём счёте недостаточно делликов для участия.')
+
                 elif rm == 'количество смертей':
                     message = f'Твой {player_balance} Напиши \"Вангую [число смертей] [' \
                               f'ставка в делликах]\", чтобы участвовать в тотализаторе на итоги. Пример: ' \
@@ -673,36 +688,43 @@ for event in longpoll.listen():
                         send_message(sender, 'Ой! Что-то пошло не так...')
                     except ValueError:
                         send_message(sender, 'Ой! Что-то пошло не так...')
-                    for i in range(len(shop)):
-                        if shop[i - 1]['sender'] == sender:
-                            if shop[i - 1]['is_true_deaths'] == 0:
-                                ending1 = find_ending(rm[1])
-                                if bal - int(rm[1]) >= 0 and int(rm[1]) > 0:
-                                    shop[i - 1]['balance'] -= int(rm[1])
-                                    totalize += int(rm[1])
-                                    shop[i - 1]['is_true_deaths'] = 1
-                                    total.append([sayer_name, int(rm[0])])
-                                    if int(rm[1]) > totalize_max:
-                                        totalize_max = int(rm[1])
-                                    ending3 = find_ending(totalize)
-                                    player_balance = get_balance(sender)
-                                    message = f'Твоя ставка: {rm[1]} деллик{ending1}. Количество смертей: {rm[0]}.\n ' \
-                                              f'Текущий {player_balance}\nСпасибо за участие и да ' \
-                                              f'пребудет с тобой удача! '
-                                    send_message(sender, message)
-                                    for admin in admins:
-                                        mes = f'Новая ставка в тотализатор (смерти)\n{sayer_name} vk.com/id{sender}\n\nРазмер ' \
-                                              f'ставки: {rm[1]} деллик{ending1}\nКоличество смертей: {rm[0]}\n\n' \
-                                              f'Текущий банк: {totalize} деллик{ending3} '
-                                        send_message(admin, mes)
-                                else:
-                                    send_message(sender,
-                                                 'На твоём счёте недостаточно делликов для участия. Попробуй '
-                                                 'уменьшить ставку!')
-                            elif shop[i - 1]['is_true_deaths'] == 1:
-                                send_message(sender, 'Твоя ставка уже учтена! Приходи в следующий раз.')
+                    db_object.execute(f"SELECT is_true_deaths FROM shop_table WHERE sender = {sender}")
+                    is_deaths = db_object.fetchone()[0]
+                    if is_deaths == 0:
+                        ending1 = find_ending(rm[1])
+                        bal = get_bal(sender)
+                        player_balance = get_balance(sender)
+                        minus = int(rm[1])
+                        if bal - minus >= 0 and minus > 0:
+                            db_object.execute(
+                                "UPDATE shop_table SET balance = balance - {} WHERE sender = {}".format(minus, sender))
+                            db_connection.commit()
+                            db_object.execute("UPDATE shop_table SET is_true_deaths = 1 WHERE sender = {}".format(sender))
+                            db_connection.commit()
+                            totalize += minus
+                            total.append([sayer_name, minus])
+                            if minus > totalize_max:
+                                totalize_max = minus
+                            ending3 = find_ending(totalize)
+                            player_balance = get_balance(sender)
+                            message = f'Твоя ставка: {rm[1]} деллик{ending1}. Количество смертей: {rm[0]}.\n ' \
+                                      f'Текущий {player_balance}\nСпасибо за участие и да ' \
+                                      f'пребудет с тобой удача! '
+                            send_message(sender, message)
+                            for admin in admins:
+                                mes = f'Новая ставка в тотализатор (смерти)\n{sayer_name} vk.com/id{sender}\n\nРазмер ' \
+                                      f'ставки: {rm[1]} деллик{ending1}\nКоличество смертей: {rm[0]}\n\n' \
+                                      f'Текущий банк: {totalize} деллик{ending3} '
+                                send_message(admin, mes)
+                        else:
+                            send_message(sender,
+                                         'На твоём счёте недостаточно делликов для участия. Попробуй '
+                                         'уменьшить ставку!')
+                    elif is_deaths == 1:
+                        send_message(sender, 'Твоя ставка уже учтена! Приходи в следующий раз.')
             else:
                 send_message(sender, 'Тотализатор пока не работает. Попробуй позже')
+
         else:
             for i in range(len(req)):
                 sender_id = req[i - 1]['sender']
