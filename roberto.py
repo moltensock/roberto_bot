@@ -260,9 +260,10 @@ for event in longpoll.listen():
         rm = received_message.lower()
         sayer_name = get_name(sender)
 
-        hour = int(datetime.datetime.today().strftime('%H'))
+        hour = int(datetime.datetime.today().strftime('%H')) + 3
+        if hour >= 24:
+            hour %= 24
         minute = int(datetime.datetime.today().strftime('%M'))
-        send_message(sender, hour)
 
         if rm == "аукцион":
             i = 0
