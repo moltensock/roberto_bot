@@ -513,8 +513,7 @@ for event in longpoll.listen():
                 mes = f'Игрок {sayer_name} (id{sender}) создал кошелёк и хочет деняк'
                 send_message(252868342, mes)
                 send_message(605574836, mes)
-                if sender != 605574836 or sender != 252868342:
-                    send_message(sender, mes)
+
             else:
                 bal = get_bal(sender)
                 player_balance = 'Твой ' + get_balance(sender)
@@ -547,8 +546,9 @@ for event in longpoll.listen():
                             adm = f'Баланс игрока vk.com/id{player} пополнен на {add} деллик{ending1}'
                             send_message(int(k[0]), message)
                             send_message(sender, adm)
-                            if sender != 605574836:
+                            if sender != 605574836 or sender != 252868342:
                                 send_message(605574836, adm)
+                                send_message(252868342, mes)
                         except IndexError:
                             continue
         elif rm == 'магазин' or rm == 'вернуться к списку предметов':
