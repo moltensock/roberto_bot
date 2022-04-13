@@ -299,7 +299,7 @@ for event in longpoll.listen():
                     break
                 elif sender != admins[i]:
                     i += 1
-        elif rm == "хочу контракт" and (hour == 16 and minute > 1 or hour == 17 and minute < 31):
+        elif rm == "хочу контракт" and (hour == 16 and minute >= 1 or hour == 17 and minute < 31):
             keyboard = VkKeyboard(inline=True)
             keyboard.add_button('Иммунитет – забрать',
                                 color=VkKeyboardColor.PRIMARY)  # POSITIVE зелёный, NEGATIVE красный, PRIMARY синий
@@ -548,7 +548,7 @@ for event in longpoll.listen():
                             send_message(sender, adm)
                             if sender != 605574836 or sender != 252868342:
                                 send_message(605574836, adm)
-                                send_message(252868342, mes)
+                                send_message(252868342, adm)
                         except IndexError:
                             continue
         elif rm == 'магазин' or rm == 'вернуться к списку предметов':
