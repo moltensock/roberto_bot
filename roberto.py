@@ -231,7 +231,7 @@ afer = 3
 truth = 2
 kill = 2
 voodoo = 1
-cham = 1
+cham = 'SOLD OUT'
 
 req = []
 total = []
@@ -559,7 +559,6 @@ for event in longpoll.listen():
             keyboard.add_button('Кукла Вуду')
             keyboard.add_line()
             keyboard.add_button('Бондаж', color=VkKeyboardColor.PRIMARY)
-            keyboard.add_button('Прослушка', color=VkKeyboardColor.PRIMARY)
             keyboard.add_line()
             keyboard.add_button('Порча')
             keyboard.add_button('Амулет')
@@ -581,7 +580,7 @@ for event in longpoll.listen():
             keyboard.add_button('Вернуться к списку предметов')
             message = f'Да, вот тут. Можешь рассмотреть поближе:\n\nХамелеон (шт.): {cham}\nБутылка водки (шт.): {vodka}\nСыворотка правды (шт.): {truth}\nЗвонок киллеру (шт.): {kill}\n\nЧто-то брать будешь или просто постоим? '
             send_button(sender, message)
-        elif rm == 'компромат' or rm == 'кукла вуду' or rm == 'бондаж' or rm == 'прослушка' or rm == 'порча' or rm == 'амулет' or rm == 'заказная статья' or rm == 'бутылка водки' or rm == 'сыворотка правды' or rm == 'звонок киллеру':
+        elif rm == 'компромат' or rm == 'кукла вуду' or rm == 'бондаж' or rm == 'хамелеон' or rm == 'порча' or rm == 'амулет' or rm == 'бутылка водки' or rm == 'сыворотка правды' or rm == 'звонок киллеру':
             keyboard = VkKeyboard(inline=True)
             keyboard.add_button('Вернуться к списку предметов')
             bal = get_bal(sender)
