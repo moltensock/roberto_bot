@@ -224,13 +224,13 @@ def finally_end():
 
 
 vodka = 4
-ropes = 4
+ropes = 2
 curse = 2
 pure = 2
 afer = 3
 truth = 2
 kill = 2
-voodoo = 1
+voodoo = 'SOLD OUT'
 cham = 'SOLD OUT'
 
 req = []
