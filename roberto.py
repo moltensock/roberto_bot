@@ -235,7 +235,7 @@ cham = 'SOLD OUT'
 
 req = []
 total = []
-group = 212384149
+group = 213254137
 totalize = 0
 totalize_max = 0
 totalize_side = 0
@@ -245,7 +245,7 @@ db_uri = 'postgres://aubkbpitosgnii:2100a90c07ce67264813bd42c5ef090455b4c91b9c96
 db_connection = psycopg2.connect(db_uri, sslmode="require")
 db_object = db_connection.cursor()
 
-token = "2c0d158a78a5e2f2565a1ae140e84c32217d770630a8da157669392e044114826636775c8f0959f980492"
+token = "49e47c560cfb951cf8ea67cf2e0a71bf73d00fb2fc51ad67c02c5bcc3332622a2f88fa1affe92302aacc0"
 authorize = vk_api.VkApi(token=token)
 longpoll = VkLongPoll(authorize)
 getting_api = authorize.get_api()
@@ -254,7 +254,7 @@ upload = VkUpload(authorize)
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
         # admins = [605574836]
-        admins = [252868342, 605574836, 553592959, 648324882, 226943267, 216035650, 471824402, 447434376]
+        admins = [252868342]
         sender = event.user_id
         received_message = event.text
         rm = received_message.lower()
@@ -827,7 +827,7 @@ for event in longpoll.listen():
             for i in range(len(req)):
                 sender_id = req[i - 1]['sender']
                 if sender_id == sender:  # clarify if they're making a request
-                    if rm == 'верона' or rm == 'найт' or rm == 'тони' or rm == 'тропа' or rm == 'винц' or rm == 'нат':
+                    if rm == 'верона' or rm == 'найт' or rm == 'тони' or rm == 'тропа' or rm == 'винц' or rm == 'нат': # !!!!!!!!!!!
                         req[i - 1]['host'] = rm.capitalize()
                         keyboard = VkKeyboard(inline=True)
                         keyboard.add_button('Активное действие')
