@@ -253,7 +253,7 @@ upload = VkUpload(authorize)
 
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-        # admins = [605574836]
+        # admins = [313354983]
         admins = [252868342]
         sender = event.user_id
         received_message = event.text
@@ -512,7 +512,7 @@ for event in longpoll.listen():
                                      'деньги! Если они, конечно, у тебя были...')
                 mes = f'Игрок {sayer_name} (id{sender}) создал кошелёк и хочет деняк'
                 send_message(252868342, mes)
-                send_message(605574836, mes)
+                send_message (313354983, mes)
 
             else:
                 bal = get_bal(sender)
@@ -546,8 +546,8 @@ for event in longpoll.listen():
                             adm = f'Баланс игрока vk.com/id{player} пополнен на {add} деллик{ending1}'
                             send_message(int(k[0]), message)
                             send_message(sender, adm)
-                            if sender != 605574836 or sender != 252868342:
-                                send_message(605574836, adm)
+                            if sender != 313354983 or sender != 252868342:
+                                send_message(313354983, adm)
                                 send_message(252868342, adm)
                         except IndexError:
                             continue
