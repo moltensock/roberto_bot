@@ -215,15 +215,15 @@ def finally_end():
         itog += vote[j] + "\n"
         j += 1
     itog += "\n\nКЛЯП:\n"
-    for j in range(len(vote)):
+    for j in range(len(gag)):
         itog += gag[j] + "\n"
         j += 1
     itog += "\n\nСЛЕЖКА:\n"
-    for j in range(len(vote)):
+    for j in range(len(seek)):
         itog += seek[j] + "\n"
         j += 1
     itog += "\n\nРАССЛЕДОВАНИЕ:\n"
-    for j in range(len(vote)):
+    for j in range(len(jour)):
         itog += jour[j] + "\n"
         j += 1
     return itog
