@@ -473,7 +473,7 @@ for event in longpoll.listen():
                 db_connection.commit()
             else:
                 send_message(sender, 'Больше ставку на победу стороны сделать нельзя! Надо было думать раньше!')
-        elif rm[:7] == 'ставка ':
+        elif rm[:7] == 'ставка ' and (hour == 16 or hour == 22):
             bal = get_bal(sender)
             player_balance = get_balance(sender)
             rm = int(rm[7:])
