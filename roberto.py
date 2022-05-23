@@ -237,7 +237,7 @@ afer = 3
 truth = 2
 kill = 2
 voodoo = 1
-cham = 1
+cham = 'SOLD OUT'
 
 req = []
 total = []
@@ -516,8 +516,8 @@ for event in longpoll.listen():
                 send_message(sender, 'Поздравляю, у тебя появился кошелёк. Держи ухо востро: скоро там появятся '
                                      'деньги! Если они, конечно, у тебя были...')
                 mes = f'Игрок {sayer_name} (id{sender}) создал кошелёк и хочет деняк'
-                send_message(252868342, mes)
-                send_message (313354983, mes)
+                send_message(501779741, mes)
+                send_message (501816721, mes)
 
             else:
                 bal = get_bal(sender)
@@ -551,9 +551,9 @@ for event in longpoll.listen():
                             adm = f'Баланс игрока vk.com/id{player} пополнен на {add} деллик{ending1}'
                             send_message(int(k[0]), message)
                             send_message(sender, adm)
-                            if sender != 313354983 or sender != 252868342:
-                                send_message(313354983, adm)
-                                send_message(252868342, adm)
+                            if sender != 501816721 or sender != 501779741:
+                                send_message(501816721, adm)
+                                send_message(501779741, adm)
                         except IndexError:
                             continue
         elif rm == 'магазин' or rm == 'вернуться к списку предметов':
