@@ -236,7 +236,7 @@ pure = 2
 afer = 3
 truth = 2
 kill = 1
-voodoo = 1
+voodoo = 'SOLD OUT'
 cham = 'SOLD OUT'
 
 req = []
