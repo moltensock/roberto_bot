@@ -235,7 +235,7 @@ curse = 2
 pure = 2
 afer = 3
 truth = 2
-kill = 2
+kill = 1
 voodoo = 1
 cham = 'SOLD OUT'
 
