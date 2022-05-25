@@ -233,9 +233,9 @@ vodka = 4
 ropes = 4
 curse = 2
 pure = 2
-afer = 3
-truth = 1
-kill = 1
+afer = 2
+truth = 'SOLD OUT'
+kill = 'SOLD OUT'
 voodoo = 'SOLD OUT'
 cham = 'SOLD OUT'
 
