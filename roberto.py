@@ -229,7 +229,7 @@ def finally_end():
     return itog
 
 
-vodka = 3
+vodka = 4
 ropes = 3
 curse = 1
 pure = 2
