@@ -230,7 +230,7 @@ def finally_end():
 
 
 vodka = 4
-ropes = 3
+ropes = 2
 curse = 1
 pure = 2
 afer = 2
