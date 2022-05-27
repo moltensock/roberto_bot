@@ -232,7 +232,7 @@ def finally_end():
 vodka = 4
 ropes = 2
 curse = 1
-pure = 2
+pure = 'SOLD OUT'
 afer = 2
 truth = 'SOLD OUT'
 kill = 'SOLD OUT'
